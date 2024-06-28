@@ -146,6 +146,8 @@ extension ImageTypeExtension on String {
       return ImageType.svg;
     } else if (endsWith('.png')) {
       return ImageType.png;
+    } else if (endsWith('.jpg')) {
+      return ImageType.jpg;
     } else if (startsWith('file://')) {
       return ImageType.file;
     } else {
@@ -154,4 +156,4 @@ extension ImageTypeExtension on String {
   }
 }
 
-enum ImageType { svg, png, network, file, unknown }
+enum ImageType { svg, png, jpg, network, file, unknown }
