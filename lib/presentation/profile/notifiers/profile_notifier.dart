@@ -11,12 +11,12 @@ class ProfileNotifier extends Notifier<ProfileModel> {
     // TODO: implement build
     return ProfileModel(
         profileItemList: [
-          ProfileItemModel(imgPath: ImageConstant.image1Path, follows: "333.5K"),
-          ProfileItemModel(imgPath: ImageConstant.image2Path, follows: "100.1K"),
-          ProfileItemModel(imgPath: ImageConstant.image3Path, follows: "55.5K"),
-          ProfileItemModel(imgPath: ImageConstant.image4Path, follows: "333.3K"),
-          ProfileItemModel(imgPath: ImageConstant.image5Path, follows: "666.6K"),
-          ProfileItemModel(imgPath: ImageConstant.image6Path, follows: "999.9K")
+          ProfileItemModel(imgPath: ImageConstant.image1Path, likes: "333.5K"),
+          ProfileItemModel(imgPath: ImageConstant.image2Path, likes: "100.1K"),
+          ProfileItemModel(imgPath: ImageConstant.image3Path, likes: "55.5K"),
+          ProfileItemModel(imgPath: ImageConstant.image4Path, likes: "333.3K"),
+          ProfileItemModel(imgPath: ImageConstant.image5Path, likes: "666.6K"),
+          ProfileItemModel(imgPath: ImageConstant.image6Path, likes: "999.9K")
         ]
     );
   }
