@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:tiktok_clone/core/utils/size_utils.dart';
-import 'package:tiktok_clone/presentation/profile/profile_page.dart';
+import 'package:tiktok_clone/core/utils/size_utils.dart' as size_utils;
+import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/profile_page_container.dart';
+import 'core/utils/size_utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,12 +12,10 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      child: Sizer(builder: (BuildContext context, Orientation orientation, deviceType) {
+      child: Sizer(builder: (BuildContext context, Orientation orientation, size_utils.DeviceType deviceType) {
         return MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
@@ -24,10 +24,8 @@ class MyApp extends StatelessWidget {
           ),
           home: ResponsiveSizer(
               builder: (context, orientation, screenSize) => const MyHomePage(title: "Test")),
-
         );
       },
-
       )
     );
   }
@@ -46,23 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: ProfilePage()
-    );
+    return ProfilePageContainer();
   }
 }

@@ -94,6 +94,14 @@ class CustomImageView extends StatelessWidget {
             color: color,
             fit: boxFit ?? BoxFit.cover,
           );
+        case ImageType.jpg:
+          return Image.asset(
+            imagePath!,
+            height: height,
+            width: width,
+            color: color,
+            fit: boxFit ?? BoxFit.cover,
+          );
         case ImageType.network:
           return CachedNetworkImage(
               height: height,

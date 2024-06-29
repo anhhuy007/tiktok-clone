@@ -2,9 +2,9 @@
 class ProfileItemModel {
   ProfileItemModel({
     required this.imgPath,
-    required this.likes
+    required this.views
   });
 
   String? imgPath;
-  String? likes;
+  String? views;
 }
