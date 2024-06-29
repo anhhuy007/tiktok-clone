@@ -26,6 +26,12 @@ class ProfilePageState extends ConsumerState<ProfilePage>{
 
   /// Section Widget
   Widget _buildScrollView(BuildContext context) {
+    //var size = MediaQuery.of(context).size;
+
+    /*24 is for notification bar on Android*/
+    //final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
+    //final double itemWidth = size.width / 2;
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -37,22 +43,25 @@ class ProfilePageState extends ConsumerState<ProfilePage>{
               children: [
                 Consumer(
                   builder: (context, ref, _) {
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisExtent: 201.v,
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 8.h,
-                        crossAxisSpacing: 8.h
+                    return Expanded(
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisExtent: 201.v,
+                          crossAxisCount: 2,
+                          //childAspectRatio: (itemWidth / itemHeight),
+                          mainAxisSpacing: 8.h,
+                          crossAxisSpacing: 8.h
+                        ),
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: ref
+                                .watch(profileNotifier)
+                                .profileItemList.length,
+                        itemBuilder: (context, index) {
+                          ProfileItemModel model = ref.watch(profileNotifier).profileItemList[index];
+                          return Padding( padding: EdgeInsets.all(5.0),child: ProfileItemWidget(profileItemModelObj: model));
+                        },
                       ),
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: ref
-                              .watch(profileNotifier)
-                              .profileItemList.length,
-                      itemBuilder: (context, index) {
-                        ProfileItemModel model = ref.watch(profileNotifier).profileItemList[index];
-                        return ProfileItemWidget(profileItemModelObj: model);
-                      },
                     );
                   },
                 )
