@@ -4,7 +4,7 @@ import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_item_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/widgets/profile_item_widget.dart';
-import 'package:tiktok_clone/theme/theme.dart';
+import 'package:tiktok_clone/theme/theme_helper.dart';
 
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -20,7 +20,7 @@ class ProfilePageState extends ConsumerState<ProfilePage>{
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ColorSchemes.primaryColorScheme.onErrorContainer,
+        backgroundColor: Theme.of(context).colorScheme.onErrorContainer,
         body: _buildScrollView(context)
       )
     );
@@ -34,7 +34,7 @@ class ProfilePageState extends ConsumerState<ProfilePage>{
             children: [
               SizedBox(height: 23.v),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 5.h),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -47,8 +47,8 @@ class ProfilePageState extends ConsumerState<ProfilePage>{
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                   mainAxisExtent: 201.v,
                                   crossAxisCount: 3,
-                                  mainAxisSpacing: 8.h,
-                                  crossAxisSpacing: 8.h
+                                  mainAxisSpacing: 5.h,
+                                  crossAxisSpacing: 1.h
                               ),
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: ref

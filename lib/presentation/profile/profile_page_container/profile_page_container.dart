@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
-import 'package:tiktok_clone/theme/theme.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/widgets/description_text_widget.dart';
+import 'package:tiktok_clone/theme/theme_helper.dart';
 import 'package:tiktok_clone/widget/app_bar_leading_image.dart';
 import 'package:tiktok_clone/widget/app_bar_title.dart';
 import 'package:tiktok_clone/widget/app_bar_trailing_icon.dart';
@@ -30,6 +33,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
 
   @override
   Widget build(BuildContext context) {
+    final model = ref.watch(profilePageContainerNotifier);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
@@ -37,59 +41,103 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
         body: SizedBox(
           width: SizeUtils.width,
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 13.v),
+            padding: EdgeInsets.only(top: 3.v),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CustomImageView(
-                  imagePath: ImageConstant.avatarPath,
-                  height: 120.adaptSize,
-                  width: 120.adaptSize,
-                  borderRadius: BorderRadius.circular(60.h),
+                SizedBox(
+                  width: FIGMA_DESIGN_WIDTH.h,
+                  height: 100.v,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.h),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.h),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.h)
+                        ),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.bannerPath,
+                        )
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(height: 14.v),
-                Text(
-                  "@lionel_messi",
-                  style: CustomTextStyles.titleLarge,
+                SizedBox(height: 20.v),
+                Row(
+                  children: [
+                    SizedBox(width: 20.h),
+                    CustomImageView(
+                      imagePath: model.avatarUrl,
+                      height: 120.adaptSize,
+                      width: 120.adaptSize,
+                      borderRadius: BorderRadius.circular(60.h),
+                    ),
+                    SizedBox(width: 25.h,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          model.name,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(height: 3.v),
+                        Text(
+                          model.handle,
+                          style: CustomTextStyles.titleSmallGray900,
+                        ),
+                        SizedBox(height: 3.v,),
+                        _buildRecentOrders(context, model)
+                      ],
+                    )
+                  ],
                 ),
-                SizedBox(height: 9.v),
-                Text(
-                  "Footballer",
-                  style: CustomTextStyles.titleSmallGray900,
+                SizedBox(height: 15.v),
+                Container(
+                  child: DescriptionTextWidget(
+                    text: model.description
+                  )
                 ),
-                SizedBox(height: 17.v),
-                _buildRecentOrders(context),
-                SizedBox(height: 18.v),
-                _buildClientTestimonials(context),
-                SizedBox(height: 34.v),
+                SizedBox(height: 20.v),
+                _buildClientTestimonials(context, model),
+                SizedBox(height: 20.v),
                 Container(
                   height: 40.v,
                   width: 341.h,
-                  margin: EdgeInsets.only(left: 24.h),
+                  //margin: EdgeInsets.only(left: 24.h),
                   child: TabBar(
                     controller: tabViewController,
                     labelPadding: EdgeInsets.zero,
-                    indicatorColor: ColorSchemes.primaryColorScheme.primary,
+                    indicatorColor: Theme.of(context).colorScheme.primary,
                     tabs: [
                       Tab(
-                        child: Icon(
-                          Icons.grid_view_rounded,
-                          color: PrimaryColors.gray500,
-                          size: 24.adaptSize
+                        child: Text(
+                          "Popular",
+                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.fsize
+                          ),
                         )
                       ),
                       Tab(
-                        child: Icon(
-                          Icons.bookmark,
-                          color: PrimaryColors.gray500,
-                          size: 24.adaptSize,
+                        child: Text(
+                          "Latest",
+                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.fsize
+                          ),
                         )
                       ),
                       Tab(
-                        child: Icon(
-                          Icons.favorite,
-                          color: PrimaryColors.gray500,
-                          size: 24.adaptSize,
+                        child: Text(
+                          "Oldest",
+                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.fsize
+                          ),
                         )
                       )
                     ]
@@ -141,70 +189,63 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
   }
 
   /// Section Widget
-  Widget _buildRecentOrders(BuildContext context) {
+  Widget _buildRecentOrders(BuildContext context, ProfilePageContainerModel model) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.h),
+      padding: EdgeInsets.symmetric(horizontal: 0.h),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 16.h),
-              child: _buildUserProfile(
-                context,
-                content: "679",
-                title: "Posts",
-                onTap: () {
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 0.h),
+                child: _buildUserProfile(
+                    context,
+                    content: model.follower.toString(),
+                    title: "Followers",
+                    onTap: () {
 
-                }
+                    }
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 0.h),
+                child: _buildUserProfile(
+                    context,
+                    content: model.following.toString(),
+                    title: "Followings",
+                    onTap: () {
+
+                    }
+                ),
               )
-            )
+            ],
           ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 16.h),
-              child: _buildUserProfile(
-                context,
-                content: "2.6M",
-                title: "Followers",
-                onTap: () {
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 8.88.h),
+                child: _buildUserProfile(
+                  context,
+                  content: model.posts.toString(),
+                  title: "Posts",
+                  onTap: () {
 
-                }
+                  }
+                )
               ),
-            )
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 16.h),
-              child: _buildUserProfile(
-                context,
-                content: "648",
-                title: "Followings",
-                onTap: () {
-
-                }
-              ),
-            )
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 16.h),
-              child: _buildUserProfile(
-                context,
-                content: "27M",
-                title: "Likes",
-                onTap: () {
-
-                }
-              ),
-            )
+            ],
           )
         ],
       ),
     );
   }
 
-  Widget _buildClientTestimonials(BuildContext context) {
+  Widget _buildClientTestimonials(BuildContext context, ProfilePageContainerModel model) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.h),
       child: Row(
@@ -212,11 +253,11 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
         children: [
           CustomElevatedButton(
             buttonStyle: ElevatedButton.styleFrom(
-                backgroundColor:  ColorSchemes.primaryColorScheme.primary,
+                backgroundColor:  Theme.of(context).colorScheme.primary,
                 shadowColor: PrimaryColors.gray900,
                 elevation: 3
             ),
-            width: 132.h,
+            width: (FIGMA_DESIGN_WIDTH - 30).h,
             text: "Follow",
             margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
             leftIcon: Container(
@@ -227,59 +268,6 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
                 size: 14.adaptSize,
               ),
             ),
-          ),
-          CustomElevatedButton(
-            buttonStyle: ElevatedButton.styleFrom(
-              backgroundColor:  ColorSchemes.primaryColorScheme.onErrorContainer,
-              shadowColor: ColorSchemes.primaryColorScheme.primary,
-              elevation: 3
-            ),
-            width: 150.h,
-            text: "Message",
-            buttonTextStyle: CustomTextStyles.titleMediumOnErrorContainerSemiBold.copyWith(
-              color: ColorSchemes.primaryColorScheme.primary
-            ),
-            margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 3.v),
-            leftIcon: Container(
-              margin: EdgeInsets.only(right: 4.h),
-              child: Icon(
-                color: ColorSchemes.primaryColorScheme.primary,
-                Icons.messenger_outlined,
-                size: 14.adaptSize,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.h),
-            child: IconButton(
-              icon: Icon(
-                Icons.camera_alt_outlined,
-                color: ColorSchemes.primaryColorScheme.primary,
-                size: 25.adaptSize,
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Color(0xFFF4D7F5))
-              ),
-              onPressed: () {
-
-              },
-            )
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 8.h),
-              child: IconButton(
-                icon: Icon(
-                  Icons.favorite,
-                  color: ColorSchemes.primaryColorScheme.primary,
-                  size: 25.adaptSize,
-                ),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Color(0xFFF4D7F5))
-                ),
-                onPressed: () {
-
-                },
-              )
           )
         ]
       )
@@ -305,25 +293,31 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
     return GestureDetector(
       onTap: () {onTap?.call();},
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 2.h),
+        padding: EdgeInsets.symmetric(horizontal: 0.h),
         decoration: BoxDecoration(
-          color: ColorSchemes.primaryColorScheme.onErrorContainer,
+          color: Theme.of(context).colorScheme.onErrorContainer,
           borderRadius: BorderRadius.circular(1.h)
         ),
-        child: Column(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               content,
-              style: CustomTextStyles.headlineSmall.copyWith(color: PrimaryColors.gray900),
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: PrimaryColors.gray500,
+                fontSize: 12.fsize
+              ),
             ),
-            SizedBox(height: 5.v),
+            SizedBox(width: 5.h),
             Text(
               title,
-              style: CustomTextStyles.titleSmallErrorContainer.copyWith(color: ColorSchemes.primaryColorScheme.errorContainer),
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: PrimaryColors.gray500,
+                fontSize: 12.fsize
+              ),
             ),
-            SizedBox(height: 1.v)
+            SizedBox(width: 1.h)
           ],
         ),
       ),

@@ -15,4 +15,5 @@ class ImageConstant {
   static String image4Path = '$imagesPath/img_image_4.jpg';
   static String image5Path = '$imagesPath/img_image_5.jpg';
   static String image6Path = '$imagesPath/img_image_6.jpg';
+  static String bannerPath = "$imagesPath/img_sample_banner.jpg";
 }

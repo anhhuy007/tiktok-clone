@@ -4,6 +4,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart' as size_utils;
 import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/profile_page_container.dart';
+import 'package:tiktok_clone/theme/theme_helper.dart';
 import 'core/utils/size_utils.dart';
 
 void main() {
@@ -19,11 +20,17 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorSchemes.primaryColorScheme,
+            textTheme: TextTheme(
+              headlineSmall: CustomTextStyles.headlineSmall,
+              labelMedium: CustomTextStyles.labelMedium,
+              titleLarge: CustomTextStyles.titleLarge,
+              titleMedium: CustomTextStyles.titleMedium,
+              titleSmall: CustomTextStyles.titleSmall
+            ),
             useMaterial3: true,
           ),
-          home: ResponsiveSizer(
-              builder: (context, orientation, screenSize) => const MyHomePage(title: "Test")),
+          home: MyHomePage(title: "Test")
         );
       },
       )

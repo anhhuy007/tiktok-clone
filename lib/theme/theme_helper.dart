@@ -5,31 +5,36 @@ class CustomTextStyles {
   static TextStyle headlineSmall = TextStyle(
     color: PrimaryColors.gray900,
     fontSize: 24.fsize,
-    fontWeight: FontWeight.w700
+    fontWeight: FontWeight.w700,
+    fontFamily: "Urbanist"
   );
 
   static TextStyle labelMedium = TextStyle(
       color: ColorSchemes.primaryColorScheme.onErrorContainer,
       fontSize: 10.fsize,
-      fontWeight: FontWeight.w600
+      fontWeight: FontWeight.w600,
+      fontFamily: "Urbanist"
   );
 
   static TextStyle titleLarge = TextStyle(
       color: PrimaryColors.gray900,
       fontSize: 20.fsize,
-      fontWeight: FontWeight.w700
+      fontWeight: FontWeight.w700,
+      fontFamily: "Urbanist"
   );
 
   static TextStyle titleMedium = TextStyle(
       color: PrimaryColors.gray900,
       fontSize: 18.fsize,
-      fontWeight: FontWeight.w700
+      fontWeight: FontWeight.w700,
+      fontFamily: "Urbanist"
   );
 
   static TextStyle titleSmall = TextStyle(
       color: PrimaryColors.gray700,
       fontSize: 14.fsize,
-      fontWeight: FontWeight.w500
+      fontWeight: FontWeight.w500,
+      fontFamily: "Urbanist"
   );
 
   static TextStyle get titleMediumOnErrorContainerSemiBold => titleMedium.copyWith(
@@ -63,7 +68,7 @@ class PrimaryColors {
 
 class ColorSchemes {
   static final primaryColorScheme = ColorScheme.light(
-    primary: Color(0xFFFF4C00),
+    primary: Color(0xFF181717),
     errorContainer: Color(0xFF424242),
     onErrorContainer: Color(0xFFFFFFFF)
   );

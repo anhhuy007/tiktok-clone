@@ -6,7 +6,17 @@ class ProfilePageContainerNotifier extends Notifier<ProfilePageContainerModel> {
   @override
   ProfilePageContainerModel build() {
     // TODO: implement build
-    return ProfilePageContainerModel();
+    return ProfilePageContainerModel(
+      userId: 1,
+      handle: "@fearron",
+      name: "Fearron",
+      follower: 1,
+      following: 2,
+      posts: 4,
+      description: "Eu proident est sint excepteur ad cillum exercitation sunt nisi consectetur minim pariatur quis elit. Aliqua cillum deserunt aliquip do irure culpa do deserunt tempor sunt.",
+      avatarUrl: "https://yt3.googleusercontent.com/PlolKXX01kTs7Eqq_GDhUeXkVgVPlJhEUNVYw4AOgZfVPhUO-k-p2I6Qo_h7bGFXSmUexS-_PW4=s176-c-k-c0x00ffffff-no-rj",
+      thumbnailUrl: "https://drive.google.com/file/d/1_VuG30LkK3lxNxRZhwFqIid1c7zBAKZh/view?usp=sharing"
+    );
   }
 }
 

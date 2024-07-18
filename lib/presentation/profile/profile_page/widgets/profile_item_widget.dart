@@ -17,14 +17,14 @@ class ProfileItemWidget extends StatelessWidget {
     // TODO: implement build
     return SizedBox(
       height: 200.v,
-      width: 121.h,
+      width: 125.h,
       child: Stack(
         alignment: Alignment.bottomLeft,
         children: [
           CustomImageView(
             imagePath: profileItemModelObj.imgPath,
             height: 200.v,
-            width: 121.h,
+            width: 125.h,
             borderRadius: BorderRadius.circular(12.h),
             alignment: Alignment.center,
           ),

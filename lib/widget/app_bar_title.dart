@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tiktok_clone/theme/theme.dart';
+import 'package:tiktok_clone/theme/theme_helper.dart';
 
 class AppBarTitle extends StatelessWidget {
   AppBarTitle({

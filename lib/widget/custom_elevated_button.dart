@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
-import 'package:tiktok_clone/theme/theme.dart';
+import 'package:tiktok_clone/theme/theme_helper.dart';
 
 class CustomElevatedButton extends StatelessWidget{
   CustomElevatedButton({
