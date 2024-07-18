@@ -57,7 +57,8 @@ dependencies:
   permission_handler: ^11.1.0
   images_picker: ^1.2.11
   url_launcher: ^6.2.4
-
+  logger: ^2.4.0
+  video_player: ^2.2.11
 
 dev_dependencies:
   flutter_test:
@@ -80,19 +81,18 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets
-    - assets/images/
+    # - assets/images
     - assets/icons/
   fonts:
     - family: Urbanist
       fonts:
-        - asset: assets/fonts/UrbanistRomanBold.ttf
+        - asset: assets/fonts/Urbanist-Bold.ttf
           weight: 700
-        - asset: assets/fonts/UrbanistRomanSemiBold.ttf
+        - asset: assets/fonts/Urbanist-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/UrbanistRomanRegular.ttf
+        - asset: assets/fonts/Urbanist-Regular.ttf
           weight: 400
-        - asset: assets/fonts/UrbanistRomanMedium.ttf
+        - asset: assets/fonts/Urbanist-Medium.ttf
           weight: 500
 
   # An image asset can refer to one or more resolution-specific "variants", see
