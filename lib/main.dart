@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/presentation/home/home_page/home_page.dart';
+import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:tiktok_clone/theme/theme_helper.dart';
 
 import 'core/utils/size_utils.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
           title: 'Flutter Demo',
-          home: HomeScreen()
+          home: HomeScreen(),
+          routes: AppRoutes.routes,
         );
       },
       )

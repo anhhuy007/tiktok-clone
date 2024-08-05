@@ -59,6 +59,8 @@ dependencies:
   url_launcher: ^6.2.4
   logger: ^2.4.0
   video_player: ^2.2.11
+  loading_animation_widget: ^1.2.1
+  skeletonizer: ^1.4.2
 
 dev_dependencies:
   flutter_test:

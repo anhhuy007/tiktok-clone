@@ -105,7 +105,7 @@ class CustomImageView extends StatelessWidget {
           return CachedNetworkImage(
               height: height,
               width: width,
-              fit: boxFit,
+              fit: boxFit ?? BoxFit.cover,
               imageUrl: imagePath!,
               color: color,
               placeholder: (context, url) => Container(
