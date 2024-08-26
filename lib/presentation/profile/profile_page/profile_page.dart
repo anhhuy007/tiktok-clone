@@ -17,7 +17,6 @@ class ProfilePage extends ConsumerStatefulWidget {
 class ProfilePageState extends ConsumerState<ProfilePage>{
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onErrorContainer,
