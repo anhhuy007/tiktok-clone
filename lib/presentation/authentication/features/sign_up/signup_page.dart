@@ -138,7 +138,7 @@ class _SignupFormWidgetState extends ConsumerState<SignupFormWidget> {
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _handleSignUp,  // Disable button when loading
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
+                    backgroundColor:  Colors.black87,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -254,7 +254,7 @@ class SignupFooterWidget extends StatelessWidget {
               Image(image: AssetImage(ImageConstant.googleIcon), width: 20),
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                primary: Colors.white,
+                backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

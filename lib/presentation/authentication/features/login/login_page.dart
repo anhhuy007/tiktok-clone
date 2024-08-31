@@ -60,7 +60,7 @@ class LoginHeaderWidget extends StatelessWidget {
       const SizedBox(height: 30),
       Text(
         "Welcome to TikTok!",
-        style: Theme.of(context).textTheme.headline2?.copyWith(
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontSize: 30,
               fontWeight: FontWeight.w800,
             ),
@@ -69,7 +69,7 @@ class LoginHeaderWidget extends StatelessWidget {
       Text(
         // random quote
         "It's a place where you can find the best short videos",
-        style: Theme.of(context).textTheme.headline2?.copyWith(
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontSize: 17,
               fontWeight: FontWeight.normal,
               color: Colors.grey,
@@ -165,7 +165,7 @@ class _LoginFormWidgetState extends ConsumerState<LoginFormWidget> {
             child: ElevatedButton(
               onPressed: isLoading ? null : _handleLogin,  // Disable button when loading
               style: ElevatedButton.styleFrom(
-                primary: Colors.black87,
+                backgroundColor: Colors.black87,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -279,8 +279,7 @@ class LoginFooterWidget extends StatelessWidget {
                   Image(image: AssetImage(ImageConstant.googleIcon), width: 20),
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                primary: Colors.white,
-                shape: RoundedRectangleBorder(
+                backgroundColor: Colors.white, shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 side: const BorderSide(color: Colors.black, width: 1),
