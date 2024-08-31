@@ -20,4 +20,30 @@ class ProfilePageContainerModel {
   String description;
   String avatarUrl;
   String thumbnailUrl;
+
+  factory ProfilePageContainerModel.fromJson(Map<String, dynamic> json) => ProfilePageContainerModel(
+    userId: json['id'],
+    handle: json['handle'],
+    name: json['name'],
+    follower: json['follower'],
+    following: json['following'],
+    posts: json['posts'],
+    description: json['description'],
+    avatarUrl: json['avatar_url'],
+    thumbnailUrl: json['thumbnail_url']
+  );
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": userId,
+      "handle": handle,
+      "name": name,
+      "follower": follower,
+      "following": following,
+      "posts": posts,
+      "description": description,
+      "avatar_url": avatarUrl,
+      "thumbnail_url": thumbnailUrl
+    };
+  }
 }
