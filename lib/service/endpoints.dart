@@ -7,3 +7,6 @@ const String profileInfoUrl = '/profile/info';
 const String popularVideosUrl = '/profile/videos/popular';
 const String latestVideosUrl = '/profile/videos/latest';
 const String oldestVideosUrl = '/profile/videos/oldest';
+const String loginUrl = '/auth/login';
+const String signupUrl = '/auth/signup';
+

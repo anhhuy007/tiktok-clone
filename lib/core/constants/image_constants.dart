@@ -6,6 +6,7 @@ class ImageConstant {
   static String tvIcon = '$iconsPath/tv.png';
   static String searchIcon = '$iconsPath/search.png';
   static String discIcon = '$iconsPath/disc.png';
+  static String googleIcon = '$iconsPath/google.png';
 
   static String playButtonPath = '$imagesPath/img_play.jpg';
   static String avatarPath = '$imagesPath/img_sample_avt.jpg';
@@ -16,4 +17,5 @@ class ImageConstant {
   static String image5Path = '$imagesPath/img_image_5.jpg';
   static String image6Path = '$imagesPath/img_image_6.jpg';
   static String bannerPath = "$imagesPath/img_sample_banner.jpg";
+  static String tiktokLogo = "$imagesPath/tiktok_image.jpg";
 }

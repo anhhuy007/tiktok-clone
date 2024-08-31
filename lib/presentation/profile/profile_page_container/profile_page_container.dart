@@ -8,12 +8,9 @@ import 'package:tiktok_clone/presentation/profile/profile_page_container/models/
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/widgets/description_text_widget.dart';
 import 'package:tiktok_clone/theme/theme_helper.dart';
-import 'package:tiktok_clone/widget/app_bar_leading_image.dart';
 import 'package:tiktok_clone/widget/app_bar_title.dart';
-import 'package:tiktok_clone/widget/app_bar_trailing_icon.dart';
 import 'package:tiktok_clone/widget/custom_app_bar.dart';
 import 'package:tiktok_clone/widget/custom_elevated_button.dart';
-import 'package:tiktok_clone/widget/custom_icon_button.dart';
 import 'package:tiktok_clone/widget/custom_image_view.dart';
 
 class ProfilePageContainer extends ConsumerStatefulWidget {
