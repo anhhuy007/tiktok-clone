@@ -44,6 +44,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ref.read(feedProvider.notifier).fetchMoreVideos();
                     }
 
+                    // pause the previous video
                     Logger().d('index: $index');
                     final previousIndex = obj.currentIndex;
                     ref
@@ -352,6 +353,11 @@ class VideoPlayerWidget extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Error: $error')),
       data: (controller) {
+        // if (controller.value.isInitialized && !controller.value.isPlaying) {
+        //   Logger().d('play video ${video.id}');
+        //   controller.play();
+        // }
+
         return Align(
           alignment: Alignment.center,
           child: Column(
@@ -404,7 +410,8 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final controllerAsyncValue = ref.watch(videoControllerProvider(widget.video.videoUrl));
+    final controllerAsyncValue =
+        ref.watch(videoControllerProvider(widget.video.videoUrl));
 
     return controllerAsyncValue.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -441,7 +448,9 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
                   color: Colors.black.withOpacity(0.4),
                   child: Center(
                     child: Icon(
-                      controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                      controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
                       color: Colors.white,
                       size: 50,
                     ),
