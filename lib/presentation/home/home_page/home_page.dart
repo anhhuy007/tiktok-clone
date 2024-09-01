@@ -401,6 +401,7 @@ class ControlsOverlay extends ConsumerStatefulWidget {
 class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
   bool _showControls = true;
   Timer? _timer;
+  bool firstTime = true;
 
   @override
   void dispose() {
@@ -428,6 +429,13 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Error: $error')),
       data: (controller) {
+        if (controller.value.isInitialized && !controller.value.isPlaying && firstTime) {
+          Logger().d('play video ${widget.video.id}');
+          controller.play();
+          firstTime = false;
+          _showControls = false;
+        }
+
         return GestureDetector(
           onTap: () {
             setState(() {
