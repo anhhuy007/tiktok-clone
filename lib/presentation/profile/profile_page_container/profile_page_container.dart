@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
@@ -30,134 +31,153 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
 
   @override
   Widget build(BuildContext context) {
-    final model = ref.watch(profilePageContainerNotifier);
+    final profileState = ref.watch(profilePageContainerNotifier);
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xFFFFFFFF),
-        appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: SizeUtils.width,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 3.v),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: FIGMA_DESIGN_WIDTH.h,
-                  height: 100.v,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.h),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.h),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.h)
+      child: profileState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) =>
+            Center(child: Text('Error: $error')),
+        data: (model) {
+          tabViewController.addListener(
+            () {
+              switch(tabViewController.index) {
+                case 0: ref.read(profileNotifier.notifier).fetchPopularVideos(userId: model.userId);
+                case 1: ref.read(profileNotifier.notifier).fetchLatestVideos(userId: model.userId);
+                case 2: ref.read(profileNotifier.notifier).fetchOldestVideos(userId: model.userId);
+              }
+            }
+          );
+          return Scaffold(
+            backgroundColor: Color(0xFFFFFFFF),
+            appBar: _buildAppBar(context, model),
+            body: SizedBox(
+              width: SizeUtils.width,
+              child: SingleChildScrollView(
+                  padding: EdgeInsets.only(top: 3.v),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: FIGMA_DESIGN_WIDTH.h,
+                        height: 100.v,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.h),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.h),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.h)
+                                ),
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.bannerPath,
+                                )
+                            ),
+                          ),
                         ),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.bannerPath,
-                        )
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.v),
-                Row(
-                  children: [
-                    SizedBox(width: 20.h),
-                    CustomImageView(
-                      imagePath: model.avatarUrl,
-                      height: 120.adaptSize,
-                      width: 120.adaptSize,
-                      borderRadius: BorderRadius.circular(60.h),
-                    ),
-                    SizedBox(width: 25.h,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          model.name,
-                          style: Theme.of(context).textTheme.headlineSmall,
+                      SizedBox(height: 20.v),
+                      Row(
+                        children: [
+                          SizedBox(width: 20.h),
+                          CustomImageView(
+                            imagePath: model.avatarUrl,
+                            height: 120.adaptSize,
+                            width: 120.adaptSize,
+                            borderRadius: BorderRadius.circular(60.h),
+                          ),
+                          SizedBox(width: 25.h,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                model.name,
+                                style: Theme.of(context).textTheme.headlineSmall,
+                              ),
+                              SizedBox(height: 3.v),
+                              Text(
+                                model.handle,
+                                style: CustomTextStyles.titleSmallGray900,
+                              ),
+                              SizedBox(height: 3.v,),
+                              _buildRecentOrders(context, model)
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 15.v),
+                      Container(
+                          child: DescriptionTextWidget(
+                              text: model.description
+                          )
+                      ),
+                      SizedBox(height: 20.v),
+                      _buildClientTestimonials(context, model),
+                      SizedBox(height: 20.v),
+                      Container(
+                        height: 40.v,
+                        width: 341.h,
+                        //margin: EdgeInsets.only(left: 24.h),
+                        child: TabBar(
+                            controller: tabViewController,
+                            labelPadding: EdgeInsets.zero,
+                            indicatorColor: Theme.of(context).colorScheme.primary,
+                            tabs: [
+                              Tab(
+                                  child: Text(
+                                    "Popular",
+                                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18.fsize
+                                    ),
+                                  )
+                              ),
+                              Tab(
+                                  child: Text(
+                                    "Latest",
+                                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18.fsize
+                                    ),
+                                  )
+                              ),
+                              Tab(
+                                  child: Text(
+                                    "Oldest",
+                                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18.fsize
+                                    ),
+                                  )
+                              )
+                            ]
                         ),
-                        SizedBox(height: 3.v),
-                        Text(
-                          model.handle,
-                          style: CustomTextStyles.titleSmallGray900,
-                        ),
-                        SizedBox(height: 3.v,),
-                        _buildRecentOrders(context, model)
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(height: 15.v),
-                Container(
-                  child: DescriptionTextWidget(
-                    text: model.description
+                      ),
+                      _buildReviews(context)
+                    ],
                   )
-                ),
-                SizedBox(height: 20.v),
-                _buildClientTestimonials(context, model),
-                SizedBox(height: 20.v),
-                Container(
-                  height: 40.v,
-                  width: 341.h,
-                  //margin: EdgeInsets.only(left: 24.h),
-                  child: TabBar(
-                    controller: tabViewController,
-                    labelPadding: EdgeInsets.zero,
-                    indicatorColor: Theme.of(context).colorScheme.primary,
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "Popular",
-                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18.fsize
-                          ),
-                        )
-                      ),
-                      Tab(
-                        child: Text(
-                          "Latest",
-                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18.fsize
-                          ),
-                        )
-                      ),
-                      Tab(
-                        child: Text(
-                          "Oldest",
-                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18.fsize
-                          ),
-                        )
-                      )
-                    ]
-                  ),
-                ),
-                _buildReviews(context)
-              ],
-            )
-          ),
-        ),
-      ),
+              ),
+            ),
+          );
+        },
+      )
     );
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, ProfilePageContainerModel model) {
     return CustomAppBar(
       leadingWidth: 52.h,
-      leading: Icon(
-        Icons.arrow_back
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       title: AppBarTitle(
-        text: "Lionel Messi",
+        text: model.name,
         margin: EdgeInsets.only(left: 16.h),
       ),
       actions: [

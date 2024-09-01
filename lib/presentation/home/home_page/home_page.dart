@@ -6,6 +6,8 @@ import 'package:logger/logger.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
 import 'package:tiktok_clone/widget/app_bar_leading_image.dart';
 import 'package:tiktok_clone/widget/app_bar_trailing_image.dart';
 import 'package:tiktok_clone/widget/custom_image_view.dart';
@@ -112,16 +114,25 @@ Widget _buildUserProfile(BuildContext context, WidgetRef ref, FeedVideo video) {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              height: 50.adaptSize,
-                              width: 50.adaptSize,
-                              child: CustomImageView(
-                                imagePath: video.channelAvatarUrl,
-                                width: 50.adaptSize,
+                            GestureDetector(
+                              onTap: () async {
+                                if(context.mounted) {
+                                  ref.read(profilePageContainerNotifier.notifier).updateState(userId: video.channelId);
+                                  ref.read(profileNotifier.notifier).fetchPopularVideos(userId: video.channelId);
+                                  Navigator.of(context).pushNamed("/profileScreen");
+                                }
+                              },
+                              child: SizedBox(
                                 height: 50.adaptSize,
-                                borderRadius:
-                                    BorderRadius.circular(30.adaptSize),
-                                alignment: Alignment.center,
+                                width: 50.adaptSize,
+                                child: CustomImageView(
+                                  imagePath: video.channelAvatarUrl,
+                                  width: 50.adaptSize,
+                                  height: 50.adaptSize,
+                                  borderRadius:
+                                      BorderRadius.circular(30.adaptSize),
+                                  alignment: Alignment.center,
+                                ),
                               ),
                             ),
                             Padding(
