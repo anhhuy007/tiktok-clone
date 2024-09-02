@@ -9,4 +9,5 @@ const String latestVideosUrl = '/profile/videos/latest';
 const String oldestVideosUrl = '/profile/videos/oldest';
 const String loginUrl = '/auth/login';
 const String signupUrl = '/auth/signup';
+const String logoutUrl = '/auth/logout';
 

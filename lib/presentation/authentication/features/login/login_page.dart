@@ -232,6 +232,7 @@ class _LoginFormWidgetState extends ConsumerState<LoginFormWidget> {
                 elevation: 0,
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
+                padding: const EdgeInsets.only(top: 10),
                 content: AwesomeSnackbarContent(
                   title: 'Congratulations',
                   message: 'Login successful!',

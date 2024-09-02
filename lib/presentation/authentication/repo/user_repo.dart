@@ -8,6 +8,7 @@ import 'package:tiktok_clone/service/endpoints.dart';
 abstract class UserRepo {
   Future<dynamic> login(UserLoginRequest req);
   Future<dynamic> signup(UserSignupRequest req);
+  Future<dynamic> logout();
 }
 
 class UserRepoImpl implements UserRepo {
@@ -48,6 +49,22 @@ class UserRepoImpl implements UserRepo {
       final response = await _dio.post(
         signupUrl,
         data: req.toJson(),
+      );
+
+      Logger().d("Response: ${response.data}");
+
+      return response;
+    } on DioError catch (e) {
+      Logger().e("Error: ${e.response!.data}");
+      return ErrorResponse.fromJson(e.response!.data);
+    }
+  }
+
+  @override
+  Future<dynamic> logout() async {
+    try {
+      final response = await _dio.get(
+        logoutUrl,
       );
 
       Logger().d("Response: ${response.data}");
