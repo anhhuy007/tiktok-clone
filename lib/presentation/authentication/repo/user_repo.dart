@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:tiktok_clone/presentation/authentication/models/error_data.dart';
-import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
+import 'package:tiktok_clone/presentation/authentication/data/error_data.dart';
+import 'package:tiktok_clone/presentation/authentication/data/user_data.dart';
 import 'package:tiktok_clone/service/endpoints.dart';
 
 abstract class UserRepo {
