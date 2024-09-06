@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/authentication/repo/auth_repo.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';

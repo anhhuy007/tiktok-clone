@@ -8,12 +8,10 @@ import 'package:tiktok_clone/presentation/profile/profile_page_container/models/
 class ProfilePageContainerNotifier extends Notifier<AsyncValue<ProfilePageContainerModel>> {
 
 
-  Future<void> updateState({required int userId}) async {
     state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
     try{
       state = await AsyncValue.guard(() async {
-        final profile = await apiService.loadProfile(userId: userId);
         return profile;
       });
     } catch (e, stackTrace) {

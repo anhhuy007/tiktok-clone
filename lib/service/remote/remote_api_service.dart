@@ -34,6 +34,7 @@ class RemoteApiService {
     }
   }
 
+<<<<<<< Updated upstream
   Future<ProfilePageContainerModel> loadProfile({required int userId}) async {
     try {
       final response = await _dio.get("$profileInfoUrl/${userId.toString()}");
@@ -110,6 +111,7 @@ class RemoteApiService {
     }
   }
 
+<<<<<<< Updated upstream
   Future<List<bool>> getLikedVideos(int userId, List<FeedVideo> videos) async {
     try {
       // get current user id from shared preferences
@@ -196,6 +198,7 @@ class RemoteApiService {
         throw DioException(
           requestOptions: response.requestOptions,
           response: response,
+<<<<<<< Updated upstream
           error: 'Failed to load comments',
         );
       }
