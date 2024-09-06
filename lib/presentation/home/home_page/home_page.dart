@@ -9,6 +9,7 @@ import 'package:tiktok_clone/presentation/authentication/repo/auth_repo.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/user_action_notifier.dart';
 import 'package:tiktok_clone/widget/app_bar_leading_image.dart';
 import 'package:tiktok_clone/widget/app_bar_trailing_image.dart';
 import 'package:tiktok_clone/widget/comment_bottom_sheet.dart';
@@ -126,6 +127,7 @@ class UserProfileWidget extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+<<<<<<< Updated upstream
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -156,6 +158,33 @@ class UserProfileWidget extends ConsumerWidget {
                                       alignment: Alignment.center,
                                     ),
                                   ),
+=======
+                            GestureDetector(
+                              onTap: () async {
+                                if (context.mounted) {
+                                  ref
+                                      .read(
+                                          profilePageContainerNotifier.notifier)
+                                      .updateState(userId: ref.read(getAuthenticatedUserProvider).value!.id, profileId: video.channelId);
+                                  ref
+                                      .read(profileNotifier.notifier)
+                                      .fetchPopularVideos(
+                                          userId: video.channelId);
+                                  Navigator.of(context)
+                                      .pushNamed("/profileScreen");
+                                }
+                              },
+                              child: SizedBox(
+                                height: 50.adaptSize,
+                                width: 50.adaptSize,
+                                child: CustomImageView(
+                                  imagePath: video.channelAvatarUrl,
+                                  width: 50.adaptSize,
+                                  height: 50.adaptSize,
+                                  borderRadius:
+                                      BorderRadius.circular(30.adaptSize),
+                                  alignment: Alignment.center,
+>>>>>>> Stashed changes
                                 ),
                                 Padding(
                                     padding: EdgeInsets.only(
@@ -493,6 +522,7 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
       _showControls = false;
     }
 
+<<<<<<< Updated upstream
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -502,6 +532,19 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
           _resetTimer();
         } else {
           _timer?.cancel();
+=======
+    return controllerAsyncValue.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => Center(child: Text('Error: $error')),
+      data: (controller) {
+        if (controller.value.isInitialized &&
+            !controller.value.isPlaying &&
+            firstTime) {
+          Logger().d('play video ${widget.video.id}');
+          controller.play();
+          firstTime = false;
+          _showControls = false;
+>>>>>>> Stashed changes
         }
         if (widget.controller.value.isPlaying) {
           widget.controller.pause();

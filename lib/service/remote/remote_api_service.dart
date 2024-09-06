@@ -39,6 +39,12 @@ class RemoteApiService {
     try {
       final response = await _dio.get("$profileInfoUrl/${userId.toString()}");
       if (response.statusCode == 200) {
+=======
+  Future<ProfilePageContainerModel> loadProfile({required int profileId}) async {
+    try{
+      final response = await _dio.get("$profileInfoUrl/${profileId.toString()}");
+      if(response.statusCode == 200) {
+>>>>>>> Stashed changes
         return ProfilePageContainerModel.fromJson(response.data["data"][0]);
       } else {
         throw DioException(
@@ -194,6 +200,14 @@ class RemoteApiService {
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['data'];
         return data.map((json) => Comment.fromJson(json)).toList();
+=======
+  Future<bool> getFollowStatus({required int followerId, required int followingId}) async {
+    try {
+      final response = await _dio.get("$followStatusUrl", queryParameters: {"follower_id": followerId, "following_id": followingId});
+      if(response.statusCode == 200) {
+        final result = response.data["data"]["followed"];
+        return result;
+>>>>>>> Stashed changes
       } else {
         throw DioException(
           requestOptions: response.requestOptions,
@@ -207,3 +221,13 @@ class RemoteApiService {
     }
   }
 }
+=======
+          error: "Failed to get follow status"
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception ('Failed to get follow status: ${err.message}');
+    }
+  }
+}
+>>>>>>> Stashed changes
