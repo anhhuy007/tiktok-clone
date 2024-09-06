@@ -10,9 +10,13 @@ const String oldestVideosUrl = '/profile/videos/oldest';
 const String loginUrl = '/auth/login';
 const String signupUrl = '/auth/signup';
 const String logoutUrl = '/auth/logout';
+<<<<<<< HEAD
 const String likeVideoStatusUrl = '/like/status';
 const String likeVideoUrl = '/like/likeVideo';
 const String unlikeVideoUrl = '/like/unlikeVideo';
 const String fetchCommentsUrl = '/comment';
 const String followStatusUrl = '/follow/status';
 const String followUrl = '/follow';
+=======
+
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)

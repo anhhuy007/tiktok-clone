@@ -38,6 +38,7 @@ class RemoteApiService {
     try{
       final response = await _dio.get("$profileInfoUrl/${userId.toString()}");
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (response.statusCode == 200) {
 =======
   Future<ProfilePageContainerModel> loadProfile({required int profileId}) async {
@@ -45,6 +46,9 @@ class RemoteApiService {
       final response = await _dio.get("$profileInfoUrl/${profileId.toString()}");
       if(response.statusCode == 200) {
 >>>>>>> Stashed changes
+=======
+      if(response.statusCode == 200) {
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
 =======
       if(response.statusCode == 200) {
 >>>>>>> parent of 010ad7a (feat: add like and comment notifier)
@@ -114,6 +118,7 @@ class RemoteApiService {
       if(response.statusCode == 200) {
         final List<dynamic> data = response.data["data"];
         final result = ProfileModel(
+<<<<<<< HEAD
 <<<<<<< HEAD
             profileItemList:
                 data.map((json) => ProfileItemModel.fromJson(json)).toList());
@@ -250,5 +255,24 @@ class RemoteApiService {
 }
 >>>>>>> Stashed changes
 =======
+}
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
+=======
+            profileItemList: data.map((json) => ProfileItemModel.fromJson(json))
+                .toList()
+        );
+        return result;
+      }
+      else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to get popular videos'
+        );
+      }
+    } on DioException catch(err) {
+      throw Exception('Failed to get popular videos: ${err.message}');
+    }
+  }
 }
 >>>>>>> parent of 010ad7a (feat: add like and comment notifier)

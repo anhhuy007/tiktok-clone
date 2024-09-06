@@ -97,6 +97,7 @@ Widget _buildFeedingPage(BuildContext context, WidgetRef ref, FeedVideo video) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 class UserProfileWidget extends ConsumerWidget {
   final FeedVideo video;
 
@@ -372,6 +373,8 @@ class UserProfileWidget extends ConsumerWidget {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 =======
+=======
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
 Widget _buildUserProfile(BuildContext context, WidgetRef ref, FeedVideo video) {
   return Align(
       alignment: Alignment.bottomLeft,
@@ -390,6 +393,9 @@ Widget _buildUserProfile(BuildContext context, WidgetRef ref, FeedVideo video) {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Row(
+<<<<<<< HEAD
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
+=======
 >>>>>>> parent of 010ad7a (feat: add like and comment notifier)
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -705,6 +711,7 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
         ref.watch(videoControllerProvider(widget.video.videoUrl));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     return GestureDetector(
       onTap: () {
@@ -718,14 +725,20 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
 =======
 =======
 >>>>>>> parent of 010ad7a (feat: add like and comment notifier)
+=======
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
     return controllerAsyncValue.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Error: $error')),
       data: (controller) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (controller.value.isInitialized &&
             !controller.value.isPlaying &&
             firstTime) {
+=======
+        if (controller.value.isInitialized && !controller.value.isPlaying && firstTime) {
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
 =======
         if (controller.value.isInitialized && !controller.value.isPlaying && firstTime) {
 >>>>>>> parent of 010ad7a (feat: add like and comment notifier)
@@ -734,7 +747,10 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
           firstTime = false;
           _showControls = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
 =======
 >>>>>>> parent of 010ad7a (feat: add like and comment notifier)
         }
