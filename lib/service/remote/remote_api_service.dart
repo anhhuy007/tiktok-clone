@@ -34,9 +34,11 @@ class RemoteApiService {
     }
   }
 
-  Future<ProfilePageContainerModel> loadProfile({required int userId}) async {
+  Future<ProfilePageContainerModel> loadProfile(
+      {required int profileId}) async {
     try {
-      final response = await _dio.get("$profileInfoUrl/${userId.toString()}");
+      final response =
+          await _dio.get("$profileInfoUrl/${profileId.toString()}");
       if (response.statusCode == 200) {
         return ProfilePageContainerModel.fromJson(response.data["data"][0]);
       } else {
@@ -110,20 +112,75 @@ class RemoteApiService {
     }
   }
 
+  Future<bool> getFollowStatus(
+      {required int followerId, required int followingId}) async {
+    try {
+      final response = await _dio.get("$followStatusUrl",
+          data: {"follower_id": followerId, "following_id": followingId});
+      if (response.statusCode == 200) {
+        final result = response.data["data"]["followed"];
+        return result;
+      } else {
+        throw DioException(
+            requestOptions: response.requestOptions,
+            response: response,
+            error: "Failed to get follow status");
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to get follow status: ${err.message}');
+    }
+  }
+
+  Future<bool> followUser(
+      {required int followerId, required int followingId}) async {
+    try {
+      final response = await _dio.post("$followUrl",
+          data: {"follower_id": followerId, "following_id": followingId});
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else {
+        throw DioException(
+            requestOptions: response.requestOptions,
+            response: response,
+            error: 'Failed to follow user');
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to follow user: ${err.message}');
+    }
+  }
+
+  Future<bool> unfollowUser(
+      {required int followerId, required int followingId}) async {
+    try {
+      final response = await _dio.post("$unfollowUrl",
+          data: {"follower_id": followerId, "following_id": followingId});
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else {
+        throw DioException(
+            requestOptions: response.requestOptions,
+            response: response,
+            error: 'Failed to unfollow user');
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to unfollow user: ${err.message}');
+    }
+  }
+
   Future<List<bool>> getLikedVideos(int userId, List<FeedVideo> videos) async {
     try {
       // get current user id from shared preferences
       const userid = '1';
       final List<bool> likedVideos = [];
-      Logger().d('Getting liked videos for user id: $userId for ${videos.length} videos');
+      Logger().d(
+          'Getting liked videos for user id: $userId for ${videos.length} videos');
       for (var vid in videos) {
-        final response = await _dio.post(
-            likeVideoStatusUrl,
-            data: {
-              'video_id': vid.id.toString(),
-              'liker_id': userid.toString(),
-            }
-        );
+        final response = await _dio.post(likeVideoStatusUrl, data: {
+          'video_id': vid.id.toString(),
+          'liker_id': userid.toString(),
+        });
         if (response.statusCode == 200) {
           Logger().d('Liked videos response: ${response.data}');
           var data = response.data['data'];
@@ -142,13 +199,10 @@ class RemoteApiService {
 
   Future<bool> likeVideo(int userId, int videoId) async {
     try {
-      final response = await _dio.post(
-          likeVideoUrl,
-          data: {
-            'video_id': videoId.toString(),
-            'liker_id': userId.toString(),
-          }
-      );
+      final response = await _dio.post(likeVideoUrl, data: {
+        'video_id': videoId.toString(),
+        'liker_id': userId.toString(),
+      });
       if (response.statusCode == 200) {
         Logger().d('Liked video response: ${response.data}');
         return true;
@@ -165,13 +219,10 @@ class RemoteApiService {
 
   Future<bool> unlikeVideo(int userId, int videoId) async {
     try {
-      final response = await _dio.post(
-          unlikeVideoUrl,
-          data: {
-            'video_id': videoId.toString(),
-            'liker_id': userId.toString(),
-          }
-      );
+      final response = await _dio.post(unlikeVideoUrl, data: {
+        'video_id': videoId.toString(),
+        'liker_id': userId.toString(),
+      });
       if (response.statusCode == 200) {
         Logger().d('Unliked video response: ${response.data}');
         return true;

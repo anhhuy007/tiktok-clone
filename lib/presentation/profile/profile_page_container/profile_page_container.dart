@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
@@ -34,7 +36,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
     final profileState = ref.watch(profilePageContainerNotifier);
     return SafeArea(
       child: profileState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => _buildPlaceholder(context),
         error: (error, stackTrace) =>
             Center(child: Text('Error: $error')),
         data: (model) {
@@ -166,6 +168,135 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
     );
   }
 
+  Widget _buildPlaceholder(BuildContext context) {
+    ProfilePageContainerModel model = ProfilePageContainerModel(userId: -1,
+        handle: "fake handle",
+        name: "fake name",
+        follower: -1,
+        following: -1,
+        posts: -1,
+        description: "fake fake fake fake",
+        avatarUrl: "fake avt",
+        thumbnailUrl: "fake thumbnail"
+    );
+    return Skeletonizer(
+      child: Scaffold(
+        backgroundColor: Color(0xFFFFFFFF),
+        appBar: _buildAppBar(context, model),
+        body: SizedBox(
+          width: SizeUtils.width,
+          child: SingleChildScrollView(
+              padding: EdgeInsets.only(top: 3.v),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: FIGMA_DESIGN_WIDTH.h,
+                    height: 100.v,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.h),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.h),
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.h)
+                            ),
+                            child: CustomImageView(
+                              imagePath: ImageConstant.bannerPath,
+                            )
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.v),
+                  Row(
+                    children: [
+                      SizedBox(width: 20.h),
+                      CustomImageView(
+                        imagePath: model.avatarUrl,
+                        height: 120.adaptSize,
+                        width: 120.adaptSize,
+                        borderRadius: BorderRadius.circular(60.h),
+                      ),
+                      SizedBox(width: 25.h,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            model.name,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          SizedBox(height: 3.v),
+                          Text(
+                            model.handle,
+                            style: CustomTextStyles.titleSmallGray900,
+                          ),
+                          SizedBox(height: 3.v,),
+                          _buildRecentOrders(context, model)
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 15.v),
+                  Container(
+                      child: DescriptionTextWidget(
+                          text: model.description
+                      )
+                  ),
+                  SizedBox(height: 20.v),
+                  _buildClientTestimonials(context, model),
+                  SizedBox(height: 20.v),
+                  Container(
+                    height: 40.v,
+                    width: 341.h,
+                    //margin: EdgeInsets.only(left: 24.h),
+                    child: TabBar(
+                        controller: tabViewController,
+                        labelPadding: EdgeInsets.zero,
+                        indicatorColor: Theme.of(context).colorScheme.primary,
+                        tabs: [
+                          Tab(
+                              child: Text(
+                                "Popular",
+                                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.fsize
+                                ),
+                              )
+                          ),
+                          Tab(
+                              child: Text(
+                                "Latest",
+                                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.fsize
+                                ),
+                              )
+                          ),
+                          Tab(
+                              child: Text(
+                                "Oldest",
+                                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.fsize
+                                ),
+                              )
+                          )
+                        ]
+                    ),
+                  ),
+                  _buildReviews(context)
+                ],
+              )
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context, ProfilePageContainerModel model) {
     return CustomAppBar(
@@ -269,19 +400,38 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomElevatedButton(
+            onPressed:  () async {
+              final currentUserId = ref.read(authNotifierProvider).user!.id;
+              if (currentUserId != model.userId) {
+                if(model.followed) {
+                  ref.read(profilePageContainerNotifier.notifier).unfollow(userId: currentUserId,
+                      profileId: model.userId);
+                }
+                else {
+                  ref.read(profilePageContainerNotifier.notifier).follow(userId: currentUserId,
+                      profileId: model.userId);
+                }
+              }
+            },
             buttonStyle: ElevatedButton.styleFrom(
-                backgroundColor:  Theme.of(context).colorScheme.primary,
+                backgroundColor:  model.followed ? Theme.of(context). colorScheme.onErrorContainer
+                    : Theme.of(context).colorScheme.primary,
                 shadowColor: PrimaryColors.gray900,
                 elevation: 3
             ),
             width: (FIGMA_DESIGN_WIDTH - 30).h,
-            text: "Follow",
+            text: model.followed ? "Unfollow" : "Follow",
+            buttonTextStyle: TextStyle(
+              color: model.followed ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onErrorContainer
+            ),
             margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
             leftIcon: Container(
               margin: EdgeInsets.only(right: 4.h),
               child: Icon(
-                color: Colors.white,
-                Icons.person_add,
+                model.followed ? Icons.check : Icons.person_add,
+                color:  model.followed ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onErrorContainer,
                 size: 14.adaptSize,
               ),
             ),
