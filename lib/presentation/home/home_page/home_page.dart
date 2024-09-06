@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/authentication/repo/auth_repo.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/user_action_notifier.dart';
 import 'package:tiktok_clone/widget/app_bar_leading_image.dart';
 import 'package:tiktok_clone/widget/app_bar_trailing_image.dart';
-import 'package:tiktok_clone/widget/comment_bottom_sheet.dart';
 import 'package:tiktok_clone/widget/custom_image_view.dart';
 import 'package:video_player/video_player.dart';
 import '../../../widget/custom_app_bar.dart';
@@ -57,13 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Logger().d('pause video $previousIndex');
                       value.pause();
                     });
-
-                    // handle changing state of the current video
-                    ref.read(feedProvider.notifier).onFeedIndexChanged(index);
-
-                    // update the comment status
-                    ref.read(feedProvider.notifier).setShowCommentStatus(false);
-                    ref.read(commentProvider.notifier).clearComments();
+                    ref.read(feedProvider.notifier).setCurrentVideo(index);
                   },
                 );
               },
@@ -96,11 +91,12 @@ Widget _buildFeedingPage(BuildContext context, WidgetRef ref, FeedVideo video) {
     alignment: Alignment.bottomLeft,
     child: Stack(children: [
       VideoPlayerWidget(video: video),
-      UserProfileWidget(video: video)
+      _buildUserProfile(context, ref, video)
     ]),
   );
 }
 
+<<<<<<< HEAD
 class UserProfileWidget extends ConsumerWidget {
   final FeedVideo video;
 
@@ -125,6 +121,7 @@ class UserProfileWidget extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+<<<<<<< Updated upstream
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -155,6 +152,33 @@ class UserProfileWidget extends ConsumerWidget {
                                       alignment: Alignment.center,
                                     ),
                                   ),
+=======
+                            GestureDetector(
+                              onTap: () async {
+                                if (context.mounted) {
+                                  ref
+                                      .read(
+                                          profilePageContainerNotifier.notifier)
+                                      .updateState(userId: ref.read(getAuthenticatedUserProvider).value!.id, profileId: video.channelId);
+                                  ref
+                                      .read(profileNotifier.notifier)
+                                      .fetchPopularVideos(
+                                          userId: video.channelId);
+                                  Navigator.of(context)
+                                      .pushNamed("/profileScreen");
+                                }
+                              },
+                              child: SizedBox(
+                                height: 50.adaptSize,
+                                width: 50.adaptSize,
+                                child: CustomImageView(
+                                  imagePath: video.channelAvatarUrl,
+                                  width: 50.adaptSize,
+                                  height: 50.adaptSize,
+                                  borderRadius:
+                                      BorderRadius.circular(30.adaptSize),
+                                  alignment: Alignment.center,
+>>>>>>> Stashed changes
                                 ),
                                 Padding(
                                     padding: EdgeInsets.only(
@@ -347,75 +371,263 @@ class UserProfileWidget extends ConsumerWidget {
                       },
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+=======
+Widget _buildUserProfile(BuildContext context, WidgetRef ref, FeedVideo video) {
+  return Align(
+      alignment: Alignment.bottomLeft,
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          margin: EdgeInsets.only(top: 386.v, right: 1.h),
+          padding: EdgeInsets.only(left: 20.h, right: 10.h),
+          child: Column(children: [
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Row(children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.discIcon,
-                                width: 24.adaptSize,
-                                height: 24.adaptSize,
-                                margin: EdgeInsets.only(
-                                  top: 4.v,
-                                  left: 8.h,
-                                  bottom: 3.v,
-                                ),
-                                borderRadius:
-                                    BorderRadius.circular(12.adaptSize),
-                                alignment: Alignment.center,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  top: 5.v,
-                                  left: 8.h,
-                                  bottom: 3.v,
-                                ),
-                                child: Icon(
-                                  Icons.music_note,
-                                  color: Colors.white,
-                                  size: 16.adaptSize,
+                            GestureDetector(
+                              onTap: () async {
+                                if(context.mounted) {
+                                  ref.read(profilePageContainerNotifier.notifier).updateState(userId: video.channelId);
+                                  ref.read(profileNotifier.notifier).fetchPopularVideos(userId: video.channelId);
+                                  Navigator.of(context).pushNamed("/profileScreen");
+                                }
+                              },
+                              child: SizedBox(
+                                height: 50.adaptSize,
+                                width: 50.adaptSize,
+                                child: CustomImageView(
+                                  imagePath: video.channelAvatarUrl,
+                                  width: 50.adaptSize,
+                                  height: 50.adaptSize,
+                                  borderRadius:
+                                      BorderRadius.circular(30.adaptSize),
+                                  alignment: Alignment.center,
                                 ),
                               ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 5.v,
-                                    bottom: 3.v,
-                                  ),
-                                  child: Text(
-                                    video.song,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.normal),
-                                  ))
-                            ]),
+                            ),
                             Padding(
                                 padding: EdgeInsets.only(
-                                  top: 5.v,
-                                  right: 8.h,
-                                  bottom: 3.v,
+                                  left: 20.h,
+                                  top: 7.v,
+                                  bottom: 7.v,
                                 ),
-                                child: CustomImageView(
-                                  imagePath:
-                                      "https://d1csarkz8obe9u.cloudfront.net/themedlandingpages/tlp_hero_music-posters-2f2d087885999ac3b17f080cb61ea1f2.jpg?ts%20=%201699441158",
-                                  width: 40.adaptSize,
-                                  height: 40.adaptSize,
-                                  borderRadius:
-                                      BorderRadius.circular(5.adaptSize),
-                                  alignment: Alignment.center,
-                                  boxFit: BoxFit.fill,
-                                ))
-                          ])),
-                )
-              ])),
-          ref.watch(feedProvider).value!.isShowingComments
-              ? CommentBottomSheet(
-                  onDismissSheet: () {
-                    ref.read(feedProvider.notifier).setShowCommentStatus(false);
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        video.channelHandle,
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subscribe button
+                                      OutlinedButton(
+                                          onPressed: () {
+                                            // subscribe
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                              foregroundColor: Colors.red,
+                                              side: const BorderSide(
+                                                  color: Colors.white),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.h,
+                                                  vertical: 4.v)),
+                                          child: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .notifications_active_rounded,
+                                                color: Colors.white,
+                                                size: 14,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                'Follow',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                              )
+                                            ],
+                                          )),
+                                    ]))
+                          ],
+                        ),
+                        SizedBox(height: 8.v),
+                        SizedBox(
+                          width: 262.h,
+                          child: Text(
+                            video.title,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ]),
+                  Padding(
+                      padding: EdgeInsets.only(
+                        left: 79.h,
+                        top: 30.v,
+                      ),
+                      child: Column(children: [
+                        Icon(
+                          Icons.flag,
+                          color: Colors.white,
+                          size: 35.adaptSize,
+                        ),
+                        SizedBox(height: 30.v),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.thumb_up,
+                              color: Colors.white,
+                              size: 30.adaptSize,
+                            ),
+                            Text(
+                              video.likes.toString(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 30.v),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.thumb_down,
+                              color: Colors.white,
+                              size: 30.adaptSize,
+                            ),
+                            const Text(
+                              "Dislike",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 30.v),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.comment,
+                              color: Colors.white,
+                              size: 30.adaptSize,
+                            ),
+                            Text(
+                              video.comments.toString(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 30.v),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.share,
+                              color: Colors.white,
+                              size: 30.adaptSize,
+                            ),
+                            const Text(
+                              "Share",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal),
+                            )
+                          ],
+                        ),
+                      ]))
+                ]),
+            Padding(
+              padding: EdgeInsets.only(top: 10.v),
+              child: GestureDetector(
+                  onTap: () {
+                    // navigate to the song detail page
                   },
-                )
-              : Container()
-        ]));
-  }
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(children: [
+                          CustomImageView(
+                            imagePath: ImageConstant.discIcon,
+                            width: 24.adaptSize,
+                            height: 24.adaptSize,
+                            margin: EdgeInsets.only(
+                              top: 4.v,
+                              left: 8.h,
+                              bottom: 3.v,
+                            ),
+                            borderRadius: BorderRadius.circular(12.adaptSize),
+                            alignment: Alignment.center,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 5.v,
+                              left: 8.h,
+                              bottom: 3.v,
+                            ),
+                            child: Icon(
+                              Icons.music_note,
+                              color: Colors.white,
+                              size: 16.adaptSize,
+                            ),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                top: 5.v,
+                                bottom: 3.v,
+                              ),
+                              child: Text(
+                                video.song,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal),
+                              ))
+                        ]),
+                        Padding(
+                            padding: EdgeInsets.only(
+                              top: 5.v,
+                              right: 8.h,
+                              bottom: 3.v,
+                            ),
+                            child: CustomImageView(
+                              imagePath:
+                                  "https://d1csarkz8obe9u.cloudfront.net/themedlandingpages/tlp_hero_music-posters-2f2d087885999ac3b17f080cb61ea1f2.jpg?ts%20=%201699441158",
+                              width: 40.adaptSize,
+                              height: 40.adaptSize,
+                              borderRadius: BorderRadius.circular(5.adaptSize),
+                              alignment: Alignment.center,
+                              boxFit: BoxFit.fill,
+                            ))
+                      ])),
+            )
+          ])));
 }
 
 class VideoPlayerWidget extends ConsumerWidget {
@@ -431,6 +643,11 @@ class VideoPlayerWidget extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Error: $error')),
       data: (controller) {
+        // if (controller.value.isInitialized && !controller.value.isPlaying) {
+        //   Logger().d('play video ${video.id}');
+        //   controller.play();
+        // }
+
         return Align(
           alignment: Alignment.center,
           child: Column(
@@ -440,7 +657,7 @@ class VideoPlayerWidget extends ConsumerWidget {
                 aspectRatio: controller.value.aspectRatio,
                 child: Stack(children: [
                   VideoPlayer(controller),
-                  ControlsOverlay(controller),
+                  ControlsOverlay(video),
                 ]),
               ),
             ],
@@ -452,9 +669,9 @@ class VideoPlayerWidget extends ConsumerWidget {
 }
 
 class ControlsOverlay extends ConsumerStatefulWidget {
-  final VideoPlayerController controller;
+  final FeedVideo video;
 
-  const ControlsOverlay(this.controller, {Key? key}) : super(key: key);
+  const ControlsOverlay(this.video, {Key? key}) : super(key: key);
 
   @override
   _ControlsOverlayState createState() => _ControlsOverlayState();
@@ -484,14 +701,11 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.controller.value.isInitialized &&
-        !widget.controller.value.isPlaying &&
-        firstTime) {
-      widget.controller.play();
-      firstTime = false;
-      _showControls = false;
-    }
+    final controllerAsyncValue =
+        ref.watch(videoControllerProvider(widget.video.videoUrl));
 
+<<<<<<< HEAD
+<<<<<<< Updated upstream
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -501,39 +715,74 @@ class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
           _resetTimer();
         } else {
           _timer?.cancel();
+=======
+=======
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
+    return controllerAsyncValue.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => Center(child: Text('Error: $error')),
+      data: (controller) {
+<<<<<<< HEAD
+        if (controller.value.isInitialized &&
+            !controller.value.isPlaying &&
+            firstTime) {
+=======
+        if (controller.value.isInitialized && !controller.value.isPlaying && firstTime) {
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
+          Logger().d('play video ${widget.video.id}');
+          controller.play();
+          firstTime = false;
+          _showControls = false;
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> parent of 010ad7a (feat: add like and comment notifier)
         }
-        if (widget.controller.value.isPlaying) {
-          widget.controller.pause();
-          Logger().d('pause video');
-        } else {
-          widget.controller.play();
-          Logger().d('play video');
-        }
-      },
-      child: Stack(
-        children: [
-          // Video player
-          VideoPlayer(widget.controller),
 
-          // Controls overlay
-          AnimatedOpacity(
-            opacity: _showControls ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 300),
-            child: Container(
-              color: Colors.black.withOpacity(0.4),
-              child: Center(
-                child: Icon(
-                  widget.controller.value.isPlaying
-                      ? Icons.pause
-                      : Icons.play_arrow,
-                  color: Colors.white,
-                  size: 50,
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              _showControls = !_showControls;
+            });
+            if (_showControls) {
+              _resetTimer();
+            } else {
+              _timer?.cancel();
+            }
+            if (controller.value.isPlaying) {
+              controller.pause();
+              Logger().d('pause video');
+            } else {
+              controller.play();
+              Logger().d('play video');
+            }
+          },
+          child: Stack(
+            children: [
+              // Video player
+              VideoPlayer(controller),
+
+              // Controls overlay
+              AnimatedOpacity(
+                opacity: _showControls ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  color: Colors.black.withOpacity(0.4),
+                  child: Center(
+                    child: Icon(
+                      controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

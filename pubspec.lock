@@ -293,6 +293,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  giphy_picker:
+    dependency: "direct main"
+    description:
+      name: giphy_picker
+      sha256: "56de5f9fbc9a067f33f8311311e78004f2629fb1c924c788c9d268f98193b89d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   google_identity_services_web:
     dependency: transitive
     description:
