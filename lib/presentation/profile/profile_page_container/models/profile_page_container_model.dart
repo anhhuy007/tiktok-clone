@@ -20,6 +20,7 @@ class ProfilePageContainerModel {
   String description;
   String avatarUrl;
   String thumbnailUrl;
+  bool followed = false;
 
   factory ProfilePageContainerModel.fromJson(Map<String, dynamic> json) => ProfilePageContainerModel(
     userId: json['id'],
