@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tiktok_clone/core/utils/navigator_services.dart';
 import 'package:tiktok_clone/presentation/authentication/features/login/login_page.dart';
-import 'package:tiktok_clone/presentation/authentication/repo/auth_repo.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/home/home_page/home_page.dart';
 import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:tiktok_clone/theme/theme_helper.dart';
@@ -18,6 +18,9 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(authNotifierProvider.notifier).loadAuthState();
+    final authState = ref.watch(authNotifierProvider);
+
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
@@ -35,23 +38,9 @@ class MyApp extends HookConsumerWidget {
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             routes: AppRoutes.routes,
-            home: ref
-                .watch(getIsAuthenticatedProvider)
-                .when(
-                  data: (bool isAuthenticated) => isAuthenticated
-                      ? const HomeScreen()
-                      : const LogInPage(),
-                  loading: () => const Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  error: (error, stackTrace) => const Scaffold(
-                    body: Center(
-                      child: Text('Error'),
-                    ),
-                  ),
-            )
+            home: authState.isAuthenticated
+                ? const HomeScreen()
+                : const LogInPage()
         );
       },
     );
