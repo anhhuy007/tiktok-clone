@@ -3,11 +3,15 @@ class UserModel {
   String username;
   String email;
 
+  // default constructor
   UserModel({
     required this.id,
     required this.username,
     required this.email,
   });
+
+  // Secondary constructor
+  UserModel.empty() : id = 0, username = '', email = '';
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
