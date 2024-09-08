@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/navigator_services.dart';
-import 'package:tiktok_clone/presentation/authentication/controller/user_controller.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/user_notifier.dart';
 import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 

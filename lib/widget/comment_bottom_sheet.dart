@@ -1,15 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:giphy_picker/giphy_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tiktok_clone/core/constants/comment_placeholder.dart';
+import 'package:tiktok_clone/core/constants/placeholder_data.dart';
+import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/presentation/home/home_page/notifiers/feed_providers.dart';
 import 'package:tiktok_clone/widget/comment_item.dart';
 
 class CommentBottomSheet extends ConsumerStatefulWidget {
   final Function onDismissSheet;
+  final int videoId;
 
-  const CommentBottomSheet({Key? key, required this.onDismissSheet})
+  const CommentBottomSheet(
+      {Key? key, required this.onDismissSheet, required this.videoId})
       : super(key: key);
 
   @override
@@ -19,7 +24,6 @@ class CommentBottomSheet extends ConsumerStatefulWidget {
 class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
   final DraggableScrollableController _controller =
       DraggableScrollableController();
-
   final TextEditingController _commentController = TextEditingController();
 
   @override
@@ -41,20 +45,32 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
     }
   }
 
+  Future<void> _openGiphyPicker() async {
+    final gif = await GiphyPicker.pickGif(
+        context: context,
+        apiKey: dotenv.env['GIPHY_API_KEY'] ?? '',
+        fullScreenDialog: false,
+        previewType: GiphyPreviewType.previewWebp);
+
+    if (gif != null) {
+      setState(() {
+        // _selectedGifUrl = gif.images.original?.url;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Dismiss the sheet when tapping outside
         widget.onDismissSheet();
       },
       child: Container(
-        color: Colors.black54, // Semi-transparent background
+        color: Colors.black54,
         child: Stack(
           children: [
-            // This GestureDetector prevents taps on the sheet from dismissing it
             GestureDetector(
-              onTap: () {}, // Empty onTap to catch taps on the sheet
+              onTap: () {},
               child: DraggableScrollableSheet(
                 initialChildSize: 0.6,
                 maxChildSize: 1,
@@ -145,7 +161,16 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
                             ),
                           ),
                           _buildReactionBar(),
-                          _buildCommentInput()
+                          CommentInput(
+                            videoId: widget.videoId,
+                            onGifSelected: (url) {
+                              setState(() {
+                                // _selectedGifUrl = url;
+                              });
+                            },
+                            controller: _controller,
+                            commentController: _commentController,
+                          ),
                         ],
                       ),
                     ),
@@ -185,8 +210,12 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
   Widget _buildReactionEmoji(String emoji, String reactionName) {
     return InkWell(
       onTap: () {
-        // TODO: Implement reaction functionality
-        print('$reactionName reaction tapped');
+        print('Reacting with $reactionName');
+        // concat the reaction to the comment
+        String comment = _commentController.text;
+        comment += ' $emoji';
+
+        _commentController.text = comment;
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -197,8 +226,30 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
       ),
     );
   }
+}
 
-  Widget _buildCommentInput() {
+class CommentInput extends ConsumerStatefulWidget {
+  const CommentInput(
+      {required this.videoId,
+      required this.onGifSelected,
+      required this.controller,
+        required this.commentController,
+      super.key});
+
+  final int videoId;
+  final Function(String?) onGifSelected;
+  final DraggableScrollableController controller;
+  final TextEditingController commentController;
+
+  @override
+  _CommentInputState createState() => _CommentInputState();
+}
+
+class _CommentInputState extends ConsumerState<CommentInput> {
+  bool _isSending = false;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: const BoxDecoration(
@@ -206,13 +257,29 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
       ),
       child: Row(
         children: [
+          IconButton(
+            icon: Image(
+              image: AssetImage(ImageConstant.gifIcon),
+              width: 30,
+            ),
+            onPressed: () async {
+              final gif = await GiphyPicker.pickGif(
+                context: context,
+                apiKey: dotenv.env['GIPHY_API_KEY'] ?? '',
+                fullScreenDialog: false,
+                previewType: GiphyPreviewType.previewWebp,
+              );
+              if (gif != null) {
+                widget.onGifSelected(gif.images.original?.url);
+              }
+            },
+          ),
           Expanded(
             child: TextField(
               onTap: () {
-                // Scroll to the bottom when the text field is tapped
-                _controller.jumpTo(1);
+                widget.controller.jumpTo(1);
               },
-              controller: _commentController,
+              controller: widget.commentController,
               decoration: const InputDecoration(
                 hintText: 'Add a comment...',
                 border: InputBorder.none,
@@ -223,19 +290,58 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.gif_outlined,
-              size: 40,
-            ),
-            onPressed: () {
-              // TODO: Implement sending comment
-              print('Sending comment: ${_commentController.text}');
-              _commentController.clear();
-            },
-          ),
+          _isSending
+              ? const SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: CircularProgressIndicator(),
+                )
+              : IconButton(
+                  icon: Image(
+                    image: AssetImage(ImageConstant.sendIcon),
+                    width: 30,
+                  ),
+                  onPressed: _isSending ? null : _sendComment,
+                ),
         ],
       ),
     );
+  }
+
+  Future<void> _sendComment() async {
+    final comment = widget.commentController.text.trim();
+    if (comment.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a comment'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      await ref.read(commentProvider.notifier).addComment(
+        widget.videoId,
+        comment,
+      );
+
+      widget.commentController.clear();
+      widget.onGifSelected(null);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to send comment. Please try again.'),
+        ),
+      );
+      Logger().e('Failed to send comment', error: e);
+    } finally {
+      setState(() {
+        _isSending = false;
+      });
+    }
   }
 }

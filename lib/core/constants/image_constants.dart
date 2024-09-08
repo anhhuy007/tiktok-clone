@@ -7,6 +7,8 @@ class ImageConstant {
   static String searchIcon = '$iconsPath/search.png';
   static String discIcon = '$iconsPath/disc.png';
   static String googleIcon = '$iconsPath/google.png';
+  static String sendIcon = '$iconsPath/send_black.png';
+  static String gifIcon = '$iconsPath/gif.png';
 
   static String playButtonPath = '$imagesPath/img_play.jpg';
   static String avatarPath = '$imagesPath/img_sample_avt.jpg';

@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
 import 'package:logger/logger.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
-import 'package:tiktok_clone/presentation/authentication/repo/auth_repo.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
@@ -15,6 +16,7 @@ import 'package:tiktok_clone/widget/app_bar_trailing_image.dart';
 import 'package:tiktok_clone/widget/comment_bottom_sheet.dart';
 import 'package:tiktok_clone/widget/custom_image_view.dart';
 import 'package:video_player/video_player.dart';
+import '../../../core/constants/placeholder_data.dart';
 import '../../../widget/custom_app_bar.dart';
 import 'notifiers/feed_providers.dart';
 
@@ -33,7 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Scaffold(
             appBar: _buildAppBar(context),
             body: feedState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => Skeletonizer(child: _buildFeedingPage(context, ref, feedFakeVideo)),
               error: (error, stackTrace) =>
                   Center(child: Text('Error: $error')),
               data: (obj) {
@@ -105,7 +107,6 @@ Widget _buildFeedingPage(BuildContext context, WidgetRef ref, FeedVideo video) {
 
 class UserProfileWidget extends ConsumerWidget {
   final FeedVideo video;
-
   const UserProfileWidget({required this.video, Key? key}) : super(key: key);
 
   @override
@@ -233,37 +234,37 @@ class UserProfileWidget extends ConsumerWidget {
                               size: 35.adaptSize,
                             ),
                             SizedBox(height: 30.v),
-                            InkWell(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                LikeButton(
+                                  size: 30.adaptSize,
+                                  isLiked: ref
+                                      .watch(feedProvider)
+                                      .value!
+                                      .currentVideoLiked,
+                                  likeBuilder: (bool isLiked) {
+                                    return Icon(
                                       Icons.thumb_up,
-                                      color: ref
-                                              .watch(feedProvider)
-                                              .value!
-                                              .currentVideoLiked
-                                          ? Colors.blue
-                                          : Colors.white,
+                                      color: isLiked ? Colors.blue : Colors.white,
                                       size: 30.adaptSize,
-                                    ),
-                                    Text(
-                                      ref
-                                          .watch(feedProvider)
-                                          .value!
-                                          .currentVideoLikeCount
-                                          .toString(),
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.normal),
-                                    )
-                                  ],
+                                    );
+                                  },
+                                  onTap: (isLiked) {
+                                    // like the video
+                                    ref.read(feedProvider.notifier).likeVideo();
+                                    return Future.value(!isLiked);
+                                  },
                                 ),
-                                onTap: () {
-                                  // like the video
-                                  ref.read(feedProvider.notifier).likeVideo();
-                                }),
+                                Text(
+                                  ref.watch(feedProvider).value!.currentVideoLikeCount.toString(),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal),
+                                )
+                              ],
+                            ),
                             SizedBox(height: 30.v),
                             InkWell(
                               child: Column(
@@ -414,6 +415,7 @@ class UserProfileWidget extends ConsumerWidget {
                   onDismissSheet: () {
                     ref.read(feedProvider.notifier).setShowCommentStatus(false);
                   },
+                  videoId: video.id,
                 )
               : Container()
         ]));
@@ -461,7 +463,6 @@ class ControlsOverlay extends ConsumerStatefulWidget {
   @override
   _ControlsOverlayState createState() => _ControlsOverlayState();
 }
-
 class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
   bool _showControls = true;
   Timer? _timer;

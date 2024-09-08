@@ -25,5 +25,6 @@ final videoControllerProvider = StateNotifierProvider.family<
 
 final commentProvider = StateNotifierProvider<CommentNotifier, AsyncValue<List<Comment>>>((ref) {
   final apiService = ref.watch(apiServiceProvider);
-  return CommentNotifier(apiService);
+  final user = ref.read(authNotifierProvider).user;
+  return CommentNotifier(apiService, user ?? UserModel.empty());
 });

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tiktok_clone/presentation/authentication/controller/user_controller.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/user_notifier.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_model.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';

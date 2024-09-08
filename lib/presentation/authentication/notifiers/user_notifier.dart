@@ -2,16 +2,18 @@ import 'package:either_dart/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/presentation/authentication/models/error_data.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
-import 'package:tiktok_clone/presentation/authentication/repo/user_repo.dart';
 
-import '../notifiers/auth_notifier.dart';
+import '../../../service/remote/remote_api_service.dart';
+import 'auth_notifier.dart';
 
 class UserController extends StateNotifier<AsyncValue<dynamic>> {
   Ref ref;
+  final RemoteApiService _remoteApiService;
 
-  UserController({
-    required this.ref,
-  }) : super(const AsyncData(null));
+  UserController(
+    this._remoteApiService,
+    this.ref,
+  ) : super(const AsyncData(null));
 
   Future<Either<String, bool>> login({
     required String email,
@@ -23,7 +25,7 @@ class UserController extends StateNotifier<AsyncValue<dynamic>> {
       email: email,
       password: password,
     );
-    final response = await ref.read(userRepoProvider).login(userRequest);
+    final response = await _remoteApiService.login(userRequest);
     if (response is ErrorResponse) {
       return Left(response.error);
     } else {
@@ -50,7 +52,7 @@ class UserController extends StateNotifier<AsyncValue<dynamic>> {
       fullname: fullname,
     );
 
-    final response = await ref.read(userRepoProvider).signup(userRequest);
+    final response = await _remoteApiService.signup(userRequest);
 
     if (response is ErrorResponse) {
       return Left(response.error);
@@ -62,5 +64,6 @@ class UserController extends StateNotifier<AsyncValue<dynamic>> {
 
 final userControllerProvider =
     StateNotifierProvider<UserController, AsyncValue<dynamic>>((ref) {
-  return UserController(ref: ref);
+  final remoteApiService = RemoteApiService();
+  return UserController(remoteApiService, ref);
 });

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/comment.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
@@ -7,13 +8,68 @@ import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_pa
 import 'package:dio/dio.dart';
 import 'package:tiktok_clone/service/endpoints.dart';
 
+import '../../presentation/authentication/models/error_data.dart';
+import '../../presentation/authentication/models/user_data.dart';
+
 class RemoteApiService {
   final Dio _dio;
 
   RemoteApiService() : _dio = Dio() {
-    _dio.options.baseUrl = baseLocalUrl;
+    _dio.options.baseUrl = baseRemoteUrl;
     _dio.options.connectTimeout = const Duration(seconds: 30);
     _dio.options.receiveTimeout = const Duration(seconds: 30);
+  }
+
+  @override
+  Future<dynamic> login(UserLoginRequest req) async {
+    try {
+      final response = await _dio.post(
+        loginUrl,
+        data: req.toJson(),
+      );
+
+      Logger().d("Response: ${response.data}");
+
+      return UserResponse.fromJson(response.data);
+    } on DioError catch (e) {
+      Logger().e("Error: ${e.response?.data}");
+      return ErrorResponse.fromJson(e.response?.data);
+    }
+  }
+
+  @override
+  Future<dynamic> signup(UserSignupRequest req) async {
+    Logger().d("Request: ${req.toJson()}");
+
+    try {
+      final response = await _dio.post(
+        signupUrl,
+        data: req.toJson(),
+      );
+
+      Logger().d("Response: ${response.data}");
+
+      return response;
+    } on DioError catch (e) {
+      Logger().e("Error: ${e.response!.data}");
+      return ErrorResponse.fromJson(e.response!.data);
+    }
+  }
+
+  @override
+  Future<dynamic> logout() async {
+    try {
+      final response = await _dio.get(
+        logoutUrl,
+      );
+
+      Logger().d("Response: ${response.data}");
+
+      return response;
+    } on DioError catch (e) {
+      Logger().e("Error: ${e.response!.data}");
+      return ErrorResponse.fromJson(e.response!.data);
+    }
   }
 
   Future<List<FeedVideo>> loadVideos({int limit = 1}) async {
@@ -252,6 +308,29 @@ class RemoteApiService {
       }
     } on DioException catch (err) {
       throw Exception('Failed to load comments: ${err.message}');
+    }
+  }
+
+  Future<List<Comment>> uploadComment(int videoId, String content, int commenterId) async {
+    try {
+      final response = await _dio.post(postCommentUrl, data: {
+        'video_id': videoId,
+        'content': content,
+        'commenter_id': commenterId,
+      });
+      if (response.statusCode == 200) {
+        Logger().d('Comment uploaded successfully');
+        final List<dynamic> data = response.data['data'];
+        return data.map((json) => Comment.fromJson(json)).toList();
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to upload comment',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to upload comment: ${err.message}');
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
+import 'package:tiktok_clone/core/utils/size_utils.dart';
 import '../presentation/home/home_page/models/comment.dart';
 
 class CommentItem extends StatefulWidget {
@@ -98,17 +100,20 @@ class _CommentItemState extends State<CommentItem> {
             child: InkWell(
               child: Column(
                 children: [
-                  _isLiked
-                      ? const Icon(
-                          Icons.favorite_rounded,
-                          color: Colors.red,
-                          size: 20,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                          color: Colors.grey[500],
-                          size: 20,
-                        ),
+                  SizedBox(height: 20.v),
+                  LikeButton(
+                    size: 24.adaptSize,
+                    likeBuilder: (bool isLiked) {
+                      return Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.grey[500],
+                        size: 24.adaptSize,
+                      );
+                    },
+                    onTap: (isLiked) {
+                      return Future.value(!isLiked);
+                    },
+                  ),
                   if (widget.comment.likeCount > 0)
                     Text(
                       widget.comment.likeCount.toString(),

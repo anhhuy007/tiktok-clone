@@ -13,7 +13,7 @@ class FeedVideo {
   final String channelHandle;
   final String channelAvatarUrl;
 
-  FeedVideo({
+    FeedVideo({
     required this.id,
     required this.title,
     required this.likes,
