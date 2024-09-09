@@ -11,9 +11,6 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
-
-  static const String routeName = '/sign_up';
-
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
@@ -215,7 +212,7 @@ class _SignupFormWidgetState extends ConsumerState<SignupFormWidget> {
               ),
             );
           Navigator.pop(context);
-          NavigatorService.pushNamed(AppRoutes.loginScreen);
+          NavigatorService.pushNamed(AppRoutes.loginPage);
         },
       );
     } finally {
@@ -281,7 +278,7 @@ class SignupFooterWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                NavigatorService.pushNamed(AppRoutes.loginScreen);
+                NavigatorService.pushNamed(AppRoutes.loginPage);
               },
               child: const Text(
                 'Log in',

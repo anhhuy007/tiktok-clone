@@ -6,6 +6,8 @@ import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_it
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_page_model.dart';
 import 'package:dio/dio.dart';
+import 'package:tiktok_clone/presentation/search/models/searching_item.dart';
+import 'package:tiktok_clone/presentation/search/models/user_info.dart';
 import 'package:tiktok_clone/service/endpoints.dart';
 
 import '../../presentation/authentication/models/error_data.dart';
@@ -331,6 +333,95 @@ class RemoteApiService {
       }
     } on DioException catch (err) {
       throw Exception('Failed to upload comment: ${err.message}');
+    }
+  }
+
+  Future<List<FeedVideo>> fetchSuggestedVideos(int limit) async {
+    try {
+      final response = await _dio.get(suggestedVideosUrl, queryParameters: {
+        'limit': limit,
+      });
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => FeedVideo.fromJson(json)).toList();
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to fetch suggested videos',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to fetch suggested videos: ${err.message}');
+    }
+  }
+
+  Future<List<SearchItem>> fetchSearchHistoryItems(int userId) async {
+    try {
+      final response = await _dio.get(searchHistoryUrl, queryParameters: {
+        'userId': userId,
+      });
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => SearchItem.fromJson(json)).toList();
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to fetch search history items',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to fetch search history items: ${err.message}');
+    }
+  }
+
+  Future<List<SearchItem>> search(String query) async {
+    try {
+      final response = await _dio.get(searchUrl, queryParameters: {
+        'searchQuery': query,
+      });
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        final userInfos = data.map((json) => UserInfo.fromJson(json)).toList();
+        return userInfos.map((userInfo) => SearchItem(
+          name: userInfo.name,
+          handle: userInfo.handle,
+          avatarUrl: userInfo.avatarUrl,
+          followers: userInfo.follower,
+          searchQuery: query,
+        )).toList();
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to fetch users',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to fetch users: ${err.message}');
+    }
+  }
+
+  Future<SearchItem> postSearchHistoryItem(int userId, String searchQuery, int searchedUserId) async {
+    try {
+      final response = await _dio.post(searchHistoryUrl, data: {
+        'userId': userId,
+        'searchQuery': searchQuery,
+        'searchedUserId': searchedUserId
+      });
+      if (response.statusCode == 200) {
+        Logger().d('Search history item posted successfully');
+        return SearchItem.fromJson(response.data);
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to post search history item',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to post search history item: ${err.message}');
     }
   }
 }

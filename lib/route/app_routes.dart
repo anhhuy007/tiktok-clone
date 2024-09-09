@@ -5,15 +5,15 @@ import 'package:tiktok_clone/presentation/home/home_page/home_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/profile_page_container.dart';
 
 class AppRoutes {
-  static const String homeScreen = '/homeScreen';
-  static const String profileScreen = '/profileScreen';
-  static const String loginScreen = '/loginScreen';
-  static const String signUpScreen = '/signUpScreen';
+  static const String homePage = '/homePage';
+  static const String profilePage = '/profilePage';
+  static const String loginPage = '/loginPage';
+  static const String signUpPage = '/signUpPage';
 
   static Map<String, WidgetBuilder> routes = {
-    homeScreen: (context) => const HomeScreen(),
-    profileScreen: (context) => ProfilePageContainer(),
-    loginScreen: (context) => const LogInPage(),
-    signUpScreen: (context) => const SignUpPage(),
+    homePage: (context) => const HomePage(),
+    profilePage: (context) => ProfilePageContainer(),
+    loginPage: (context) => const LogInPage(),
+    signUpPage: (context) => const SignUpPage(),
   };
 }

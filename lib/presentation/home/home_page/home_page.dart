@@ -21,14 +21,14 @@ import '../../../core/constants/placeholder_data.dart';
 import '../../../widget/custom_app_bar.dart';
 import 'notifiers/feed_providers.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final feedState = ref.watch(feedProvider);

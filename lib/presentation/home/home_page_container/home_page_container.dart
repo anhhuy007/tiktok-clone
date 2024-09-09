@@ -69,7 +69,7 @@ class _HomeScreenContainerState extends ConsumerState<HomeScreenContainer> {
         body: IndexedStack(
           index: _currentIndex,
           children: const [
-            HomeScreen(),
+            HomePage(),
             Center(child: Text('Favourite')),
             Center(child: Text('Add')),
             Center(child: Text('Chat')),
