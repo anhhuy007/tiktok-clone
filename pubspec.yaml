@@ -40,7 +40,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   shared_preferences: ^2.2.2
   cached_network_image: ^3.3.0
-  flutter_svg: ^2.0.9
+  flutter_svg: ^2.0.10+1
   equatable: ^2.0.5
   google_sign_in: ^6.2.1
   flutter_login_facebook: ^2.0.0
@@ -69,6 +69,7 @@ dependencies:
   emoji_picker_flutter: ^3.0.0
   flutter_dotenv: ^5.1.0
   like_button: ^2.0.5
+  salomon_bottom_bar: ^3.3.2
 
 dev_dependencies:
   flutter_test:

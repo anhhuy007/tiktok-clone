@@ -9,6 +9,17 @@ class ImageConstant {
   static String googleIcon = '$iconsPath/google.png';
   static String sendIcon = '$iconsPath/send_black.png';
   static String gifIcon = '$iconsPath/gif.png';
+  static String homeIcon_white = '$iconsPath/home_white.png';
+  static String favouriteIcon_white = '$iconsPath/favourite_white.png';
+  static String profileIcon_white = '$iconsPath/profile_white.png';
+  static String chatIcon_white = '$iconsPath/chat_white.png';
+  static String addIcon_white = '$iconsPath/add_white.png';
+  static String searchIcon_white = '$iconsPath/search_white.png';
+  static String homeIcon = '$iconsPath/home.png';
+  static String favouriteIcon = '$iconsPath/favourite.png';
+  static String profileIcon = '$iconsPath/profile.png';
+  static String chatIcon = '$iconsPath/chat.png';
+  static String addIcon = '$iconsPath/add.png';
 
   static String playButtonPath = '$imagesPath/img_play.jpg';
   static String avatarPath = '$imagesPath/img_sample_avt.jpg';

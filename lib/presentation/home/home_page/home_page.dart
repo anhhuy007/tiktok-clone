@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
@@ -35,7 +36,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Scaffold(
             appBar: _buildAppBar(context),
             body: feedState.when(
-              loading: () => Skeletonizer(child: _buildFeedingPage(context, ref, feedFakeVideo)),
+              loading: () => Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black,
+                child: Center(
+                  child: LoadingAnimationWidget.newtonCradle(
+                    color: Colors.white,
+                    size: 2 * 50.adaptSize,
+                  ),
+                ),
+              ),
               error: (error, stackTrace) =>
                   Center(child: Text('Error: $error')),
               data: (obj) {
@@ -77,19 +87,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
 PreferredSizeWidget _buildAppBar(BuildContext context) {
   return CustomAppBar(
-      height: 44.v,
-      leadingWidth: 52.h,
-      bgColor: Colors.black,
-      leading: AppBarLeadingImage(
-          imagePath: ImageConstant.tvIcon,
-          margin: EdgeInsets.only(left: 24.h, top: 8.v, bottom: 7.v),
-          onTap: () {}),
-      actions: [
-        AppBarTrailingImage(
-            imagePath: ImageConstant.searchIcon,
-            margin: EdgeInsets.fromLTRB(24.h, 8.v, 24.h, 7.v),
-            onTap: () {})
-      ]);
+    height: 44.v,
+    leadingWidth: 100.h,
+    bgColor: Colors.black,
+    title: const Padding(
+      padding: EdgeInsets.only(top: 10, left: 10),
+      child: Row(
+        children: [
+          Text(
+            "Shorts",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Icon(
+            Icons.arrow_drop_down_outlined,
+            color: Colors.white,
+            size: 30,
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 Widget _buildFeedingPage(BuildContext context, WidgetRef ref, FeedVideo video) {
@@ -97,7 +118,6 @@ Widget _buildFeedingPage(BuildContext context, WidgetRef ref, FeedVideo video) {
     color: Colors.black,
     width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height,
-    alignment: Alignment.bottomLeft,
     child: Stack(children: [
       VideoPlayerWidget(video: video),
       UserProfileWidget(video: video)
@@ -107,6 +127,7 @@ Widget _buildFeedingPage(BuildContext context, WidgetRef ref, FeedVideo video) {
 
 class UserProfileWidget extends ConsumerWidget {
   final FeedVideo video;
+
   const UserProfileWidget({required this.video, Key? key}) : super(key: key);
 
   @override
@@ -137,7 +158,12 @@ class UserProfileWidget extends ConsumerWidget {
                                       ref
                                           .read(profilePageContainerNotifier
                                               .notifier)
-                                          .updateState(profileId: video.channelId, userId: ref.read(authNotifierProvider).user!.id);
+                                          .updateState(
+                                              profileId: video.channelId,
+                                              userId: ref
+                                                  .read(authNotifierProvider)
+                                                  .user!
+                                                  .id);
                                       ref
                                           .read(profileNotifier.notifier)
                                           .fetchPopularVideos(
@@ -227,120 +253,135 @@ class UserProfileWidget extends ConsumerWidget {
                             left: 79.h,
                             top: 30.v,
                           ),
-                          child: Column(children: [
-                            Icon(
-                              Icons.flag,
-                              color: Colors.white,
-                              size: 35.adaptSize,
-                            ),
-                            SizedBox(height: 30.v),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                LikeButton(
-                                  size: 30.adaptSize,
-                                  isLiked: ref
-                                      .watch(feedProvider)
-                                      .value!
-                                      .currentVideoLiked,
-                                  likeBuilder: (bool isLiked) {
-                                    return Icon(
-                                      Icons.thumb_up,
-                                      color: isLiked ? Colors.blue : Colors.white,
-                                      size: 30.adaptSize,
-                                    );
-                                  },
-                                  onTap: (isLiked) {
-                                    // like the video
-                                    ref.read(feedProvider.notifier).likeVideo();
-                                    return Future.value(!isLiked);
-                                  },
-                                ),
-                                Text(
-                                  ref.watch(feedProvider).value!.currentVideoLikeCount.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.normal),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 30.v),
-                            InkWell(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                          child: Container(
+                            height: 330.v,
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Icon(
-                                    Icons.thumb_down,
-                                    color: ref
+                                    Icons.flag,
+                                    color: Colors.white,
+                                    size: 35.adaptSize,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      LikeButton(
+                                        size: 30.adaptSize,
+                                        isLiked: ref
                                             .watch(feedProvider)
                                             .value!
-                                            .currentVideoUnliked
-                                        ? Colors.blue
-                                        : Colors.white,
-                                    size: 30.adaptSize,
+                                            .currentVideoLiked,
+                                        likeBuilder: (bool isLiked) {
+                                          return Icon(
+                                            Icons.thumb_up,
+                                            color: isLiked
+                                                ? Colors.blue
+                                                : Colors.white,
+                                            size: 30.adaptSize,
+                                          );
+                                        },
+                                        onTap: (isLiked) {
+                                          // like the video
+                                          ref
+                                              .read(feedProvider.notifier)
+                                              .likeVideo();
+                                          return Future.value(!isLiked);
+                                        },
+                                      ),
+                                      Text(
+                                        ref
+                                            .watch(feedProvider)
+                                            .value!
+                                            .currentVideoLikeCount
+                                            .toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.normal),
+                                      )
+                                    ],
                                   ),
-                                  const Text(
-                                    "Dislike",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.normal),
-                                  )
-                                ],
-                              ),
-                              onTap: () {
-                                // unlike the video
-                                ref.read(feedProvider.notifier).unlikeVideo();
-                              },
-                            ),
-                            SizedBox(height: 30.v),
-                            InkWell(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.comment,
-                                    color: Colors.white,
-                                    size: 30.adaptSize,
+                                  InkWell(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.thumb_down,
+                                          color: ref
+                                                  .watch(feedProvider)
+                                                  .value!
+                                                  .currentVideoUnliked
+                                              ? Colors.blue
+                                              : Colors.white,
+                                          size: 30.adaptSize,
+                                        ),
+                                        const Text(
+                                          "Dislike",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.normal),
+                                        )
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      // unlike the video
+                                      ref
+                                          .read(feedProvider.notifier)
+                                          .unlikeVideo();
+                                    },
                                   ),
-                                  Text(
-                                    video.comments.toString(),
-                                    style: const TextStyle(
+                                  InkWell(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.comment,
+                                          color: Colors.white,
+                                          size: 30.adaptSize,
+                                        ),
+                                        Text(
+                                          video.comments.toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.normal),
+                                        )
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      ref
+                                          .read(commentProvider.notifier)
+                                          .loadComments(video.id);
+                                      ref
+                                          .read(feedProvider.notifier)
+                                          .setShowCommentStatus(true);
+                                    },
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.share,
                                         color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.normal),
-                                  )
-                                ],
-                              ),
-                              onTap: () {
-                                ref
-                                    .read(commentProvider.notifier)
-                                    .loadComments(video.id);
-                                ref
-                                    .read(feedProvider.notifier)
-                                    .setShowCommentStatus(true);
-                              },
-                            ),
-                            SizedBox(height: 30.v),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.share,
-                                  color: Colors.white,
-                                  size: 30.adaptSize,
-                                ),
-                                const Text(
-                                  "Share",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.normal),
-                                )
-                              ],
-                            ),
-                          ]))
+                                        size: 30.adaptSize,
+                                      ),
+                                      const Text(
+                                        "Share",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.normal),
+                                      )
+                                    ],
+                                  ),
+                                ]),
+                          ))
                     ]),
                 Padding(
                   padding: EdgeInsets.only(top: 10.v),
@@ -463,6 +504,7 @@ class ControlsOverlay extends ConsumerStatefulWidget {
   @override
   _ControlsOverlayState createState() => _ControlsOverlayState();
 }
+
 class _ControlsOverlayState extends ConsumerState<ControlsOverlay> {
   bool _showControls = true;
   Timer? _timer;

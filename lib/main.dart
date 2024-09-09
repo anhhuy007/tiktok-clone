@@ -6,6 +6,7 @@ import 'package:tiktok_clone/core/utils/navigator_services.dart';
 import 'package:tiktok_clone/presentation/authentication/features/login/login_page.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/home/home_page/home_page.dart';
+import 'package:tiktok_clone/presentation/home/home_page_container/home_page_container.dart';
 import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:tiktok_clone/theme/theme_helper.dart';
 import 'core/utils/size_utils.dart';
@@ -40,7 +41,7 @@ class MyApp extends HookConsumerWidget {
             debugShowCheckedModeBanner: false,
             routes: AppRoutes.routes,
             home: authState.isAuthenticated
-                ? const HomeScreen()
+                ? const HomeScreenContainer()
                 : const LogInPage()
         );
       },
