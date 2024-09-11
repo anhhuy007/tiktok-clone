@@ -17,7 +17,7 @@ class RemoteApiService {
   final Dio _dio;
 
   RemoteApiService() : _dio = Dio() {
-    _dio.options.baseUrl = baseRemoteUrl;
+    _dio.options.baseUrl = baseLocalUrl;
     _dio.options.connectTimeout = const Duration(seconds: 30);
     _dio.options.receiveTimeout = const Duration(seconds: 30);
   }
@@ -240,7 +240,6 @@ class RemoteApiService {
           'liker_id': userid.toString(),
         });
         if (response.statusCode == 200) {
-          Logger().d('Liked videos response: ${response.data}');
           var data = response.data['data'];
           likedVideos.add(data['liked']);
         } else {
@@ -262,7 +261,6 @@ class RemoteApiService {
         'liker_id': userId.toString(),
       });
       if (response.statusCode == 200) {
-        Logger().d('Liked video response: ${response.data}');
         return true;
       } else {
         throw DioException(
@@ -338,11 +336,10 @@ class RemoteApiService {
 
   Future<List<FeedVideo>> fetchSuggestedVideos(int limit) async {
     try {
-      final response = await _dio.get(suggestedVideosUrl, queryParameters: {
-        'limit': limit,
-      });
+      final response = await _dio.get(suggestedVideosUrl + limit.toString());
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
+        final List<dynamic> data = response.data['data'];
+        Logger().d('Suggested videos: ${response.data}');
         return data.map((json) => FeedVideo.fromJson(json)).toList();
       } else {
         throw DioException(
@@ -362,7 +359,7 @@ class RemoteApiService {
         'userId': userId,
       });
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
+        final List<dynamic> data = response.data['data'];
         return data.map((json) => SearchItem.fromJson(json)).toList();
       } else {
         throw DioException(
@@ -378,19 +375,21 @@ class RemoteApiService {
 
   Future<List<SearchItem>> search(String query) async {
     try {
-      final response = await _dio.get(searchUrl, queryParameters: {
-        'searchQuery': query,
-      });
+      final response = await _dio.get(searchUrl + query);
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
+        final List<dynamic> data = response.data['data'];
         final userInfos = data.map((json) => UserInfo.fromJson(json)).toList();
-        return userInfos.map((userInfo) => SearchItem(
+        final result = userInfos.map((userInfo) => SearchItem(
           name: userInfo.name,
           handle: userInfo.handle,
           avatarUrl: userInfo.avatarUrl,
           followers: userInfo.follower,
           searchQuery: query,
         )).toList();
+
+        Logger().d('Search results: $result');
+
+        return result;
       } else {
         throw DioException(
           requestOptions: response.requestOptions,
@@ -412,7 +411,7 @@ class RemoteApiService {
       });
       if (response.statusCode == 200) {
         Logger().d('Search history item posted successfully');
-        return SearchItem.fromJson(response.data);
+        return SearchItem.fromJson(response.data['data']);
       } else {
         throw DioException(
           requestOptions: response.requestOptions,

@@ -7,11 +7,13 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
+import 'package:tiktok_clone/core/utils/navigator_services.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
+import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:tiktok_clone/widget/app_bar_leading_image.dart';
 import 'package:tiktok_clone/widget/app_bar_trailing_image.dart';
 import 'package:tiktok_clone/widget/comment_bottom_sheet.dart';
@@ -29,6 +31,7 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+
   @override
   Widget build(BuildContext context) {
     final feedState = ref.watch(feedProvider);
@@ -154,6 +157,7 @@ class UserProfileWidget extends ConsumerWidget {
                               children: [
                                 GestureDetector(
                                   onTap: () async {
+                                    Logger().d('navigate to profile screen');
                                     if (context.mounted) {
                                       ref
                                           .read(profilePageContainerNotifier
@@ -168,8 +172,7 @@ class UserProfileWidget extends ConsumerWidget {
                                           .read(profileNotifier.notifier)
                                           .fetchPopularVideos(
                                               userId: video.channelId);
-                                      Navigator.of(context)
-                                          .pushNamed("/profileScreen");
+                                      NavigatorService.pushNamed(AppRoutes.profilePage);
                                     }
                                   },
                                   child: SizedBox(

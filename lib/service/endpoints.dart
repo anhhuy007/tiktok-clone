@@ -19,5 +19,5 @@ const String unlikeVideoUrl = '/like/unlikeVideo';
 const String fetchCommentsUrl = '/comment';
 const String postCommentUrl = '/comment';
 const String suggestedVideosUrl = '/search/popular/';
-const String searchHistoryUrl = '/search/history';
-const String searchUrl = '/search';
+const String searchHistoryUrl = '/search/history/';
+const String searchUrl = '/search/';

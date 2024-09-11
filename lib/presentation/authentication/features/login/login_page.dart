@@ -225,11 +225,11 @@ class _LoginFormWidgetState extends ConsumerState<LoginFormWidget> {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(
+              const SnackBar(
                 elevation: 0,
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
-                padding: const EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(top: 10),
                 content: AwesomeSnackbarContent(
                   title: 'Congratulations',
                   message: 'Login successful!',

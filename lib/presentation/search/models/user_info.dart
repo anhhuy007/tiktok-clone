@@ -21,15 +21,15 @@ class UserInfo {
   String thumbnailUrl;
 
   factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
-      userId: json['id'],
-      handle: json['handle'],
-      name: json['name'],
-      follower: json['follower'],
-      following: json['following'],
-      posts: json['posts'],
-      description: json['description'],
-      avatarUrl: json['avatar_url'],
-      thumbnailUrl: json['thumbnail_url']);
+      userId: json['id'] ?? 0,
+      handle: json['handle'] ?? '',
+      name: json['name'] ?? '',
+      follower: json['follower'] ?? 0,
+      following: json['following'] ?? 0,
+      posts: json['posts'] ?? 0,
+      description: json['description'] ?? '',
+      avatarUrl: json['avatar_url'] ?? '',
+      thumbnailUrl: json['thumbnail_url'] ?? '');
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,47 +1,64 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
+import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/search/models/seach_page_model.dart';
 import 'package:tiktok_clone/service/remote/remote_api_service.dart';
 
+import '../../home/home_page/notifiers/feed_providers.dart';
+
 class SearchPageNotifier extends StateNotifier<AsyncValue<SearchPageModel>> {
   SearchPageNotifier({required this.apiService, required this.user})
-      : super(const AsyncValue.loading());
+      : super(const AsyncValue.loading()) {
+    fetchSuggestedVideos();
+  }
 
   final RemoteApiService apiService;
   final UserModel user;
 
-  void updateQuery(String query) {
-    state = state.whenData((data) => data.copyWith(query: query));
-  }
-
   Future<void> fetchSuggestedVideos() async {
-    state = const AsyncValue.loading();
-    // Fetch suggested videos
-    final suggestedVideos = await apiService.fetchSuggestedVideos(15);
-    state = state
-        .whenData((data) => data.copyWith(suggestedVideos: suggestedVideos));
+    try {
+      state = const AsyncValue.loading();
+      // Fetch suggested videos
+      Logger().i('Fetching suggested videos...');
+      final suggestedVideos = await apiService.fetchSuggestedVideos(18);
+      state = AsyncValue.data(SearchPageModel(
+        suggestedVideos: suggestedVideos,
+        isFetchingMore: false,
+      ));
+    } catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace);
+    }
   }
 
   Future<void> fetchMoreSuggestedVideos() async {
-    state = const AsyncValue.loading();
-    // Fetch more suggested videos
-    final suggestedVideos = await apiService.fetchSuggestedVideos(15);
-    state = state.whenData((data) => data.copyWith(
-        suggestedVideos: [...data.suggestedVideos, ...suggestedVideos]));
-  }
-
-  Future<void> fetchSearchHistoryItems() async {
-    state = const AsyncValue.loading();
-    // Fetch search history items
-    final searchHistoryItems = await apiService.fetchSearchHistoryItems(user.id);
-    state = state.whenData(
-        (data) => data.copyWith(searchItems: searchHistoryItems));
-  }
-
-  Future<void> search(String query) async {
-    state = const AsyncValue.loading();
-    // Search for query
-    final searchResults = await apiService.search(query);
-    state = state.whenData((data) => data.copyWith(searchItems: searchResults));
+    state.whenData((data) async {
+        try {
+          state = AsyncValue.data(data.copyWith(isFetchingMore: true));
+          // Fetch more suggested videos
+          final suggestedVideos = await apiService.fetchSuggestedVideos(15);
+          final List<FeedVideo> updatedSuggestedVideos = [
+          ...state.value?.suggestedVideos ?? [],
+          ...suggestedVideos
+          ];
+          state = AsyncValue.data(SearchPageModel(
+            suggestedVideos: updatedSuggestedVideos,
+            isFetchingMore: false,
+          ));
+        } catch (e, stackTrace) {
+          state = AsyncValue.error(e, stackTrace);
+        }
+    });
   }
 }
+
+final searchPageNotifierProvider =
+    StateNotifierProvider<SearchPageNotifier, AsyncValue<SearchPageModel>>(
+        (ref) {
+  final apiService = ref.watch(apiServiceProvider);
+  final user = ref.read(authNotifierProvider).user;
+
+  return SearchPageNotifier(
+      apiService: apiService, user: user ?? UserModel.empty());
+});

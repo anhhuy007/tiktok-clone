@@ -3,17 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/home/home_page/home_page.dart';
+import 'package:tiktok_clone/presentation/search/search_page.dart';
 
 import '../../../core/constants/image_constants.dart';
 
-class HomeScreenContainer extends ConsumerStatefulWidget {
-  const HomeScreenContainer({Key? key}) : super(key: key);
+class HomePageContainer extends ConsumerStatefulWidget {
+  const HomePageContainer({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenContainerState createState() => _HomeScreenContainerState();
+  _HomePageContainerState createState() => _HomePageContainerState();
 }
 
-class _HomeScreenContainerState extends ConsumerState<HomeScreenContainer> {
+class _HomePageContainerState extends ConsumerState<HomePageContainer> {
   var _currentIndex = 0;
 
   @override
@@ -70,7 +71,7 @@ class _HomeScreenContainerState extends ConsumerState<HomeScreenContainer> {
           index: _currentIndex,
           children: const [
             HomePage(),
-            Center(child: Text('Favourite')),
+            SearchPage(),
             Center(child: Text('Add')),
             Center(child: Text('Chat')),
             Center(child: Text('Profile')),

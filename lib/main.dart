@@ -41,7 +41,7 @@ class MyApp extends HookConsumerWidget {
             debugShowCheckedModeBanner: false,
             routes: AppRoutes.routes,
             home: authState.isAuthenticated
-                ? const HomeScreenContainer()
+                ? const HomePageContainer()
                 : const LogInPage()
         );
       },
