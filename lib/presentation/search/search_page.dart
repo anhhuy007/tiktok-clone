@@ -6,6 +6,7 @@ import 'package:tiktok_clone/presentation/search/models/seach_page_model.dart';
 import 'package:tiktok_clone/presentation/search/notifiers/onfocus_search_notifier.dart';
 import 'package:tiktok_clone/presentation/search/onsearch_focus_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:tiktok_clone/presentation/home/home_page/feeding_page.dart';
 
 import 'notifiers/search_notifier.dart';
 
@@ -147,61 +148,68 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 }
 
 class VideoThumbnail extends StatelessWidget {
-  final FeedVideo video; // Replace with your actual video model
+  final FeedVideo video;
 
   const VideoThumbnail({super.key, required this.video});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Thumbnail image
-        CachedNetworkImage(
-          imageUrl: video.thumbnailUrl,
-          // Replace with your actual thumbnail URL
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            color: Colors.grey[300],
-            child: const Center(child: CircularProgressIndicator()),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FeedingPage(video: video),
           ),
-          errorWidget: (context, url, error) => Container(
-            color: Colors.grey[300],
-            child: const Icon(Icons.error),
-          ),
-        ),
-        // View count
-        Positioned(
-          left: 8,
-          bottom: 8,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(4),
+        );
+      },
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Thumbnail image
+          CachedNetworkImage(
+            imageUrl: video.thumbnailUrl,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Container(
+              color: Colors.grey[300],
+              child: const Center(child: CircularProgressIndicator()),
             ),
-            child: Row(
-              children: [
-                Text(
-                  _formatViewCount(video.views),
-                  // Replace with your actual view count
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+            errorWidget: (context, url, error) => Container(
+              color: Colors.grey[300],
+              child: const Icon(Icons.error),
+            ),
+          ),
+          // View count
+          Positioned(
+            left: 8,
+            bottom: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    _formatViewCount(video.views),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                const Icon(
-                  Icons.remove_red_eye,
-                  color: Colors.white,
-                  size: 13,
-                )
-              ],
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.white,
+                    size: 13,
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

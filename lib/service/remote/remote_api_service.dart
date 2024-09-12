@@ -380,6 +380,7 @@ class RemoteApiService {
         final List<dynamic> data = response.data['data'];
         final userInfos = data.map((json) => UserInfo.fromJson(json)).toList();
         final result = userInfos.map((userInfo) => SearchItem(
+          id: userInfo.userId,
           name: userInfo.name,
           handle: userInfo.handle,
           avatarUrl: userInfo.avatarUrl,

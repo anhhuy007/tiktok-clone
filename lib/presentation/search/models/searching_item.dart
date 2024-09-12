@@ -1,4 +1,5 @@
 class SearchItem {
+  final int? id;
   final String? name;
   final String? handle;
   final String? avatarUrl;
@@ -6,6 +7,7 @@ class SearchItem {
   final String? searchQuery;
 
   SearchItem({
+    this.id,
     this.name,
     this.handle,
     this.avatarUrl,
@@ -15,6 +17,7 @@ class SearchItem {
 
   factory SearchItem.fromJson(Map<String, dynamic> json) {
     return SearchItem(
+      id: json['id'],
       name: json['name'],
       handle: json['handle'],
       avatarUrl: json['avatarUrl'],
@@ -25,6 +28,7 @@ class SearchItem {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'handle': handle,
       'avatarUrl': avatarUrl,

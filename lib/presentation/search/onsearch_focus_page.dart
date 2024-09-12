@@ -33,7 +33,7 @@ class OnFocusSearchPage extends ConsumerWidget {
               itemCount: data.searchItems?.length,
               itemBuilder: (context, index) {
                 final userInfo = data.searchItems?[index];
-                return searchItemWidget(userInfo!);
+                return searchItemWidget(userInfo!, ref);
               },
             ),
           ),
