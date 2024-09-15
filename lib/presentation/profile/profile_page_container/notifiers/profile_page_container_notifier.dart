@@ -24,24 +24,27 @@ class ProfilePageContainerNotifier extends Notifier<AsyncValue<ProfilePageContai
   }
 
   Future<void> follow({required int userId, required int profileId}) async {
-    state = const AsyncValue.loading();
+    //state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
     try{
-      final result = await apiService.followUser(followerId: userId, followingId: profileId);
-      if(result)
-        await updateState(userId: userId, profileId: profileId);
+      await apiService.followUser(followerId: userId, followingId: profileId);
+      final stateCurrentValue = state.value!;
+      state = AsyncValue.loading();
+      //avoid too much fetching
+      state = AsyncValue.data(stateCurrentValue.copyWith(follower: stateCurrentValue.follower + 1, followed: true));
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }
   }
 
   Future<void> unfollow({required int userId, required int profileId}) async {
-    state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
     try{
-      final result = await apiService.unfollowUser(followerId: userId, followingId: profileId);
-      if(result)
-        await updateState(userId: userId, profileId: profileId);
+      await apiService.unfollowUser(followerId: userId, followingId: profileId);
+      final stateCurrentValue = state.value!;
+      state = AsyncValue.loading();
+      //avoid too much fetching
+      state = AsyncValue.data(stateCurrentValue.copyWith(follower: stateCurrentValue.follower - 1, followed: false));
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }

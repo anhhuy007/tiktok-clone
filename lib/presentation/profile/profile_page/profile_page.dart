@@ -93,7 +93,7 @@ class ProfilePageState extends ConsumerState<ProfilePage>{
                         effect: ShimmerEffect(
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
-                          duration: Duration(seconds: 1)
+                          duration: Duration(milliseconds: 1)
                         ),
                         enabled: true,
                         child: GridView.builder(
