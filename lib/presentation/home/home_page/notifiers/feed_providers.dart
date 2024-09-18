@@ -13,7 +13,7 @@ final apiServiceProvider =
 
 final feedProvider =
     StateNotifierProvider<FeedNotifier, AsyncValue<FeedModel>>((ref) {
-  final user = ref.read(authNotifierProvider).user;
+  final user = ref.read(authProvider).user;
   final apiService = ref.watch(apiServiceProvider);
   return FeedNotifier(user ?? UserModel.empty(), apiService);
 });
@@ -25,6 +25,6 @@ final videoControllerProvider = StateNotifierProvider.family<
 
 final commentProvider = StateNotifierProvider<CommentNotifier, AsyncValue<List<Comment>>>((ref) {
   final apiService = ref.watch(apiServiceProvider);
-  final user = ref.read(authNotifierProvider).user;
+  final user = ref.read(authProvider).user;
   return CommentNotifier(apiService, user ?? UserModel.empty());
 });

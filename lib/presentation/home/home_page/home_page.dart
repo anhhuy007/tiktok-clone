@@ -19,6 +19,13 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+
+  @override
+  void dispose() {
+    ref.read(feedProvider.notifier).dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final feedState = ref.watch(feedProvider);

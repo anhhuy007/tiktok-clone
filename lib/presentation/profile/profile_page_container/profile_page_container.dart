@@ -401,7 +401,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
         children: [
           CustomElevatedButton(
             onPressed:  () async {
-              final currentUserId = ref.read(authNotifierProvider).user!.id;
+              final currentUserId = ref.read(authProvider).user!.id;
               if (currentUserId != model.userId) {
                 if(model.followed) {
                   ref.read(profilePageContainerNotifier.notifier).unfollow(userId: currentUserId,

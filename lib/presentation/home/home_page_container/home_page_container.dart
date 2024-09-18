@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/create_post/createpost_page.dart';
 import 'package:tiktok_clone/presentation/home/home_page/home_page.dart';
 import 'package:tiktok_clone/presentation/search/search_page.dart';
 
@@ -72,7 +73,7 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
           children: const [
             HomePage(),
             SearchPage(),
-            Center(child: Text('Add')),
+            CreatePostPage(),
             Center(child: Text('Chat')),
             Center(child: Text('Profile')),
           ],

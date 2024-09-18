@@ -39,7 +39,7 @@ class OnFocusSearchNotifier extends StateNotifier<AsyncValue<OnFocusSearchPageMo
 
 final onFocusSearchProvider = StateNotifierProvider<OnFocusSearchNotifier, AsyncValue<OnFocusSearchPageModel>>((ref) {
   final apiService = ref.watch(apiServiceProvider);
-  final user = ref.read(authNotifierProvider).user;
+  final user = ref.read(authProvider).user;
 
   return OnFocusSearchNotifier(apiService, user ?? UserModel.empty());
 });

@@ -29,7 +29,7 @@ class UserController extends StateNotifier<AsyncValue<dynamic>> {
     if (response is ErrorResponse) {
       return Left(response.error);
     } else {
-      ref.read(authNotifierProvider.notifier).setAuthState(
+      ref.read(authProvider.notifier).setAuthState(
             true,
             response.user,
           );

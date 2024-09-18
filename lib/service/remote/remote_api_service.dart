@@ -196,8 +196,7 @@ class RemoteApiService {
           data: {"follower_id": followerId, "following_id": followingId});
       if (response.statusCode == 200) {
         return true;
-      }
-      else {
+      } else {
         throw DioException(
             requestOptions: response.requestOptions,
             response: response,
@@ -215,8 +214,7 @@ class RemoteApiService {
           data: {"follower_id": followerId, "following_id": followingId});
       if (response.statusCode == 200) {
         return true;
-      }
-      else {
+      } else {
         throw DioException(
             requestOptions: response.requestOptions,
             response: response,
@@ -311,7 +309,8 @@ class RemoteApiService {
     }
   }
 
-  Future<List<Comment>> uploadComment(int videoId, String content, int commenterId) async {
+  Future<List<Comment>> uploadComment(
+      int videoId, String content, int commenterId) async {
     try {
       final response = await _dio.post(postCommentUrl, data: {
         'video_id': videoId,
@@ -379,14 +378,16 @@ class RemoteApiService {
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['data'];
         final userInfos = data.map((json) => UserInfo.fromJson(json)).toList();
-        final result = userInfos.map((userInfo) => SearchItem(
-          id: userInfo.userId,
-          name: userInfo.name,
-          handle: userInfo.handle,
-          avatarUrl: userInfo.avatarUrl,
-          followers: userInfo.follower,
-          searchQuery: query,
-        )).toList();
+        final result = userInfos
+            .map((userInfo) => SearchItem(
+                  id: userInfo.userId,
+                  name: userInfo.name,
+                  handle: userInfo.handle,
+                  avatarUrl: userInfo.avatarUrl,
+                  followers: userInfo.follower,
+                  searchQuery: query,
+                ))
+            .toList();
 
         Logger().d('Search results: $result');
 
@@ -403,7 +404,8 @@ class RemoteApiService {
     }
   }
 
-  Future<SearchItem> postSearchHistoryItem(int userId, String searchQuery, int searchedUserId) async {
+  Future<SearchItem> postSearchHistoryItem(
+      int userId, String searchQuery, int searchedUserId) async {
     try {
       final response = await _dio.post(searchHistoryUrl, data: {
         'userId': userId,
@@ -422,6 +424,30 @@ class RemoteApiService {
       }
     } on DioException catch (err) {
       throw Exception('Failed to post search history item: ${err.message}');
+    }
+  }
+
+  Future<bool> uploadPost(
+      {required int channelId,
+      required String title,
+      required String song,
+      required String videoUrl}) async {
+    try {
+      final response = await _dio.post(uploadPostUrl, data: {
+        'channelId': channelId,
+        'title': title,
+        'song': song,
+        'videoUrl': videoUrl,
+        'thumbnailUrl': "https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg",
+      });
+      if (response.statusCode == 200) {
+        Logger().d('Post uploaded successfully');
+        return true;
+      } else {
+        return false;
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to upload post: ${err.message}');
     }
   }
 }

@@ -11,6 +11,7 @@ import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier
 Widget searchItemWidget(SearchItem item, WidgetRef ref) {
   return ListTile(
     onTap: () {
+      /**/
       _navigateToProfilePage(ref, item.id ?? 0);
     },
     leading: CircleAvatar(
@@ -68,7 +69,7 @@ Widget searchItemWidget(SearchItem item, WidgetRef ref) {
 void _navigateToProfilePage(WidgetRef ref, int profileId) {
   ref.read(profilePageContainerNotifier.notifier).updateState(
         profileId: profileId,
-        userId: ref.read(authNotifierProvider).user!.id,
+        userId: ref.read(authProvider).user!.id,
       );
   ref.read(profileNotifier.notifier).fetchPopularVideos(userId: profileId);
   NavigatorService.pushNamed(AppRoutes.profilePage);

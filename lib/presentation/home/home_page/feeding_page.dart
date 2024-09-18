@@ -76,7 +76,7 @@ class UserProfileWidget extends ConsumerWidget {
                                           .updateState(
                                           profileId: video.channelId,
                                           userId: ref
-                                              .read(authNotifierProvider)
+                                              .read(authProvider)
                                               .user!
                                               .id);
                                       ref

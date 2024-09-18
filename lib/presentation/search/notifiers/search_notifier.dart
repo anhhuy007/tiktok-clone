@@ -57,7 +57,7 @@ final searchPageNotifierProvider =
     StateNotifierProvider<SearchPageNotifier, AsyncValue<SearchPageModel>>(
         (ref) {
   final apiService = ref.watch(apiServiceProvider);
-  final user = ref.read(authNotifierProvider).user;
+  final user = ref.read(authProvider).user;
 
   return SearchPageNotifier(
       apiService: apiService, user: user ?? UserModel.empty());
