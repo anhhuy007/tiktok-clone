@@ -4,7 +4,7 @@ import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/search/models/seach_page_model.dart';
-import 'package:tiktok_clone/service/remote/remote_api_service.dart';
+import 'package:tiktok_clone/service/remote_api_service.dart';
 
 import '../../home/home_page/notifiers/feed_providers.dart';
 
@@ -53,7 +53,7 @@ class SearchPageNotifier extends StateNotifier<AsyncValue<SearchPageModel>> {
   }
 }
 
-final searchPageNotifierProvider =
+final searchPageProvider =
     StateNotifierProvider<SearchPageNotifier, AsyncValue<SearchPageModel>>(
         (ref) {
   final apiService = ref.watch(apiServiceProvider);

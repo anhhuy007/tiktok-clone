@@ -5,7 +5,7 @@ import 'package:tiktok_clone/presentation/home/home_page/models/feed_model.dart'
 import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../../service/remote/remote_api_service.dart';
+import '../../../../service/remote_api_service.dart';
 import 'package:logger/logger.dart';
 
 class FeedNotifier extends StateNotifier<AsyncValue<FeedModel>> {

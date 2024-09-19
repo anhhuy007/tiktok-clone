@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/home/home_page/models/comment.dart';
-import 'package:tiktok_clone/service/remote/remote_api_service.dart';
+import 'package:tiktok_clone/service/remote_api_service.dart';
 
 class CommentNotifier extends StateNotifier<AsyncValue<List<Comment>>> {
   final RemoteApiService _apiService;

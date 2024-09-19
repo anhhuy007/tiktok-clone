@@ -19,7 +19,6 @@ class SearchPage extends ConsumerStatefulWidget {
 
 class _SearchPageState extends ConsumerState<SearchPage> {
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _searchController = TextEditingController();
   bool _isSearchFocused = false;
 
   @override
@@ -32,19 +31,18 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-      ref.read(searchPageNotifierProvider.notifier).fetchMoreSuggestedVideos();
+      ref.read(searchPageProvider.notifier).fetchMoreSuggestedVideos();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final searchState = ref.watch(searchPageNotifierProvider);
+    final searchState = ref.watch(searchPageProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +54,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               padding:
                   const EdgeInsets.only(left: 8, right: 8, top: 20, bottom: 8),
               child: TextField(
-                controller: _searchController,
+                controller: searchState.value?.searchController,
                 decoration: InputDecoration(
                   hintText: 'Search anything...',
                   hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
@@ -78,9 +76,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   });
                 },
                 onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    ref.read(onFocusSearchProvider.notifier).search(value);
-                  }
+                  ref.read(onFocusSearchProvider.notifier).search(value);
                 },
               ),
             ),
@@ -93,8 +89,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 setState(() {
                   _isSearchFocused = false;
                 });
-                _searchController.clear();
+                searchState.value?.searchController.clear();
                 FocusScope.of(context).unfocus();
+                ref.read(onFocusSearchProvider.notifier).fetchSearchHistoryItems();
               },
             )
           : Consumer(

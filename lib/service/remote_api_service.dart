@@ -10,8 +10,8 @@ import 'package:tiktok_clone/presentation/search/models/searching_item.dart';
 import 'package:tiktok_clone/presentation/search/models/user_info.dart';
 import 'package:tiktok_clone/service/endpoints.dart';
 
-import '../../presentation/authentication/models/error_data.dart';
-import '../../presentation/authentication/models/user_data.dart';
+import '../presentation/authentication/models/error_data.dart';
+import '../presentation/authentication/models/user_data.dart';
 
 class RemoteApiService {
   final Dio _dio;
@@ -354,12 +354,37 @@ class RemoteApiService {
 
   Future<List<SearchItem>> fetchSearchHistoryItems(int userId) async {
     try {
-      final response = await _dio.get(searchHistoryUrl, queryParameters: {
-        'userId': userId,
-      });
+      final response = await _dio.get(searchHistoryUrl + userId.toString());
       if (response.statusCode == 200) {
+        Logger().d('Search history items: ${response.data}');
         final List<dynamic> data = response.data['data'];
-        return data.map((json) => SearchItem.fromJson(json)).toList();
+
+        //   get user info if user exists
+        for (var item in data) {
+          item['searchQuery'] = item['search_query'];
+          if (item['searched_user_id'] == null) {
+            continue;
+          }
+
+          final userId = item['searched_user_id'];
+          final userResponse = await _dio.get("$searchUserUrl/$userId");
+          Logger().d('User response: ${userResponse.data}');
+          if (userResponse.statusCode == 200) {
+            final userInfo = UserInfo.fromJson(userResponse.data['data']);
+            item['userId'] = userInfo.userId;
+            item['name'] = userInfo.name;
+            item['handle'] = userInfo.handle;
+            item['avatarUrl'] = userInfo.avatarUrl;
+            item['followers'] = userInfo.follower;
+          }
+        }
+
+        final searchItems =
+            data.map((json) => SearchItem.fromJson(json)).toList();
+        for (var item in searchItems) {
+          Logger().d('Search item: ${item.searchQuery}');
+        }
+        return searchItems;
       } else {
         throw DioException(
           requestOptions: response.requestOptions,
@@ -376,11 +401,13 @@ class RemoteApiService {
     try {
       final response = await _dio.get(searchUrl + query);
       if (response.statusCode == 200) {
+        Logger().d('Search response: ${response.data}');
         final List<dynamic> data = response.data['data'];
         final userInfos = data.map((json) => UserInfo.fromJson(json)).toList();
         final result = userInfos
             .map((userInfo) => SearchItem(
-                  id: userInfo.userId,
+                  id: 0,
+                  userId: userInfo.userId,
                   name: userInfo.name,
                   handle: userInfo.handle,
                   avatarUrl: userInfo.avatarUrl,
@@ -388,9 +415,6 @@ class RemoteApiService {
                   searchQuery: query,
                 ))
             .toList();
-
-        Logger().d('Search results: $result');
-
         return result;
       } else {
         throw DioException(
@@ -404,7 +428,7 @@ class RemoteApiService {
     }
   }
 
-  Future<SearchItem> postSearchHistoryItem(
+  Future<void> postSearchHistoryItem(
       int userId, String searchQuery, int searchedUserId) async {
     try {
       final response = await _dio.post(searchHistoryUrl, data: {
@@ -414,7 +438,6 @@ class RemoteApiService {
       });
       if (response.statusCode == 200) {
         Logger().d('Search history item posted successfully');
-        return SearchItem.fromJson(response.data['data']);
       } else {
         throw DioException(
           requestOptions: response.requestOptions,
@@ -424,6 +447,23 @@ class RemoteApiService {
       }
     } on DioException catch (err) {
       throw Exception('Failed to post search history item: ${err.message}');
+    }
+  }
+
+  Future<void> deleteSearchHistoryItem(int searchId) async {
+    try {
+      final response = await _dio.delete(searchHistoryUrl + searchId.toString());
+      if (response.statusCode == 200) {
+        Logger().d('Search history item deleted successfully');
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to delete search history item',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to delete search history item: ${err.message}');
     }
   }
 

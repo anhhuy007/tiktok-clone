@@ -21,4 +21,5 @@ const String postCommentUrl = '/comment';
 const String suggestedVideosUrl = '/search/popular/';
 const String searchHistoryUrl = '/search/history/';
 const String searchUrl = '/search/';
+const String searchUserUrl = '/search/user';
 const String uploadPostUrl = '/feed/post';

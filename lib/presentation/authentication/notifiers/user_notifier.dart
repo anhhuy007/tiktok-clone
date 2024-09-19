@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/presentation/authentication/models/error_data.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 
-import '../../../service/remote/remote_api_service.dart';
+import '../../../service/remote_api_service.dart';
 import 'auth_notifier.dart';
 
 class UserController extends StateNotifier<AsyncValue<dynamic>> {

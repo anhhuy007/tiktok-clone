@@ -1,5 +1,6 @@
 class SearchItem {
   final int? id;
+  final int? userId;
   final String? name;
   final String? handle;
   final String? avatarUrl;
@@ -8,6 +9,7 @@ class SearchItem {
 
   SearchItem({
     this.id,
+    this.userId,
     this.name,
     this.handle,
     this.avatarUrl,
@@ -18,6 +20,7 @@ class SearchItem {
   factory SearchItem.fromJson(Map<String, dynamic> json) {
     return SearchItem(
       id: json['id'],
+      userId: json['userId'],
       name: json['name'],
       handle: json['handle'],
       avatarUrl: json['avatarUrl'],
@@ -29,6 +32,7 @@ class SearchItem {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'name': name,
       'handle': handle,
       'avatarUrl': avatarUrl,

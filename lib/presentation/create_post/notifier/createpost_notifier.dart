@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/create_post/model/createpost_state.dart';
-import 'package:tiktok_clone/service/remote/remote_api_service.dart';
+import 'package:tiktok_clone/service/remote_api_service.dart';
 
 import '../../home/home_page/notifiers/feed_providers.dart';
 

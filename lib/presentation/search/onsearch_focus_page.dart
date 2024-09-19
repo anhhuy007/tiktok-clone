@@ -28,14 +28,28 @@ class OnFocusSearchPage extends ConsumerWidget {
         Expanded(
           child: searchState.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) => Center(child: Text('Error: $error')),
-            data: (data) => data.searchItems == null ? const Center(child: Text("No result")) : ListView.builder(
-              itemCount: data.searchItems?.length,
-              itemBuilder: (context, index) {
-                final userInfo = data.searchItems?[index];
-                return searchItemWidget(userInfo!, ref);
-              },
-            ),
+            error: (error, stackTrace) => Center(child: Text('Error: $error $stackTrace')),
+            data: (data) =>
+                ref.watch(searchPageProvider).value?.searchController.text != ''
+                    ? data.searchItems == null
+                        ? const Center(child: Text("No result"))
+                        : ListView.builder(
+                            itemCount: data.searchItems?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final item = data.searchItems![index];
+                              return UserSearchItemWidget(item, ref, false);
+                            },
+                          )
+                    : ListView.builder(
+                        itemCount: data.searchedItems?.length,
+                        itemBuilder: (context, index) {
+                          final userInfo = data.searchedItems?[index];
+                          return userInfo?.name != null
+                              ? UserSearchItemWidget(userInfo!, ref, true)
+                              : QuerySearchItemWidget(
+                                  userInfo!.searchQuery!, ref);
+                        },
+                      ),
           ),
         ),
       ],
