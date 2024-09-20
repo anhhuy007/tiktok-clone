@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/create_post/createpost_page.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/profile_page_container.dart';
 import 'package:tiktok_clone/presentation/search/search_page.dart';
 
 import '../../core/constants/image_constants.dart';
@@ -25,6 +29,12 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +110,18 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
                 case 2:
                   return const CreatePostPage();
                 case 3:
-                  return const Profile();
+                  Future.microtask(() async {
+                    final user = ref
+                        .read(authProvider)
+                        .user;
+                    if (user != null) {
+                      await ref.read(profilePageContainerNotifier.notifier).updateState(
+                          userId: user.id, profileId: user.id);
+                      await ref.read(profileNotifier.notifier).fetchPopularVideos(
+                          userId: user.id);
+                    }
+                  });
+                  return ProfilePageContainer();
                 default:
                   return const SizedBox.shrink();
               }

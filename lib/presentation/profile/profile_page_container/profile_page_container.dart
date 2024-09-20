@@ -36,16 +36,18 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
     final profileState = ref.watch(profilePageContainerNotifier);
     return SafeArea(
       child: profileState.when(
-        loading: () => _buildPlaceholder(context),
+        loading: () {
+          return _buildPlaceholder(context);
+          },
         error: (error, stackTrace) =>
             Center(child: Text('Error: $error')),
         data: (model) {
           tabViewController.addListener(
-            () {
+            () async {
               switch(tabViewController.index) {
-                case 0: ref.read(profileNotifier.notifier).fetchPopularVideos(userId: model.userId);
-                case 1: ref.read(profileNotifier.notifier).fetchLatestVideos(userId: model.userId);
-                case 2: ref.read(profileNotifier.notifier).fetchOldestVideos(userId: model.userId);
+                case 0: await ref.read(profileNotifier.notifier).fetchPopularVideos(userId: model.userId);
+                case 1: await ref.read(profileNotifier.notifier).fetchLatestVideos(userId: model.userId);
+                case 2: await ref.read(profileNotifier.notifier).fetchOldestVideos(userId: model.userId);
               }
             }
           );
@@ -301,12 +303,14 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
   PreferredSizeWidget _buildAppBar(BuildContext context, ProfilePageContainerModel model) {
     return CustomAppBar(
       leadingWidth: 52.h,
-      leading: IconButton(
+      leading: ModalRoute.of(context)?.settings.name != null &&
+          ModalRoute.of(context)?.settings.name == "/profilePage" ?
+      IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () {
+        onPressed: () async {
           Navigator.of(context).pop();
-        },
-      ),
+        }
+      ) : null,
       title: AppBarTitle(
         text: model.name,
         margin: EdgeInsets.only(left: 16.h),
@@ -394,11 +398,35 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer> with
   }
 
   Widget _buildClientTestimonials(BuildContext context, ProfilePageContainerModel model) {
+    final currentUserId = ref.read(authProvider).user!.id;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          currentUserId == model.userId ?
+          CustomElevatedButton(
+            onPressed:  null,
+            buttonStyle: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                shadowColor: PrimaryColors.gray900,
+                elevation: 3
+            ),
+            width: (FIGMA_DESIGN_WIDTH - 30).h,
+            text: "Edit Profile",
+            buttonTextStyle: TextStyle(
+                color: Theme.of(context).colorScheme.onErrorContainer
+            ),
+            margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
+            leftIcon: Container(
+              margin: EdgeInsets.only(right: 4.h),
+              child: Icon(
+                Icons.edit,
+                color: Theme.of(context).colorScheme.onErrorContainer,
+                size: 14.adaptSize,
+              ),
+            ),
+          ) :
           CustomElevatedButton(
             onPressed:  () async {
               final currentUserId = ref.read(authProvider).user!.id;
