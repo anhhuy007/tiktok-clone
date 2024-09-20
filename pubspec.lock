@@ -177,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  double_tap_to_exit:
+    dependency: "direct main"
+    description:
+      name: double_tap_to_exit
+      sha256: a52c2359aedfe2335fcfb044889aaea0eac6021a6f944b970f8ea40d3c217ebe
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   dynamic_tabbar:
     dependency: "direct main"
     description:
