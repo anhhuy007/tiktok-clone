@@ -1,5 +1,7 @@
-import 'package:tiktok_clone/presentation/home/home_page/models/comment.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
+
+
+import '../../presentation/reels/models/comment.dart';
+import '../../presentation/reels/models/feed_video.dart';
 
 final List<Comment> commentFakeData = List.generate(
     5,

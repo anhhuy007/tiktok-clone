@@ -2,11 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/search/models/seach_page_model.dart';
 import 'package:tiktok_clone/service/remote_api_service.dart';
 
-import '../../home/home_page/notifiers/feed_providers.dart';
+import '../../reels/models/feed_video.dart';
+import '../../reels/notifiers/feed_providers.dart';
+
 
 class SearchPageNotifier extends StateNotifier<AsyncValue<SearchPageModel>> {
   SearchPageNotifier({required this.apiService, required this.user})

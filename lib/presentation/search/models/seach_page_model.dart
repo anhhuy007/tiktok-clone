@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
-import 'package:tiktok_clone/presentation/search/models/searching_item.dart';
+import '../../reels/models/feed_video.dart';
+
 
 class SearchPageModel {
   final List<FeedVideo> suggestedVideos;

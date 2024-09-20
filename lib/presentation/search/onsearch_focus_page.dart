@@ -43,11 +43,11 @@ class OnFocusSearchPage extends ConsumerWidget {
                     : ListView.builder(
                         itemCount: data.searchedItems?.length,
                         itemBuilder: (context, index) {
-                          final userInfo = data.searchedItems?[index];
-                          return userInfo?.name != null
-                              ? UserSearchItemWidget(userInfo!, ref, true)
+                          final searchItem = data.searchedItems?[index];
+                          return searchItem?.name != null
+                              ? UserSearchItemWidget(searchItem!, ref, true)
                               : QuerySearchItemWidget(
-                                  userInfo!.searchQuery!, ref);
+                                  searchItem!, ref, true);
                         },
                       ),
           ),

@@ -1,16 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tiktok_clone/presentation/home/home_page/notifiers/feed_providers.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/user_action_model.dart';
+
+import '../../../reels/notifiers/feed_providers.dart';
 
 class UserActionNotifier extends Notifier<AsyncValue<UserAction>> {
   @override
   AsyncValue<UserAction> build() {
-    return AsyncValue.loading();
+    return const AsyncValue.loading();
   }
 
   Future<void> updateUserAction(
       {required int followerId, required int followingId}) async {
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
     try {
       final response = await apiService.getFollowStatus(

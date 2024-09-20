@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_model.dart';
-import 'package:tiktok_clone/presentation/home/home_page/notifiers/comment_notifier.dart';
-import 'package:tiktok_clone/presentation/home/home_page/notifiers/feed_notifier.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../service/remote_api_service.dart';
-import '../../../authentication/notifiers/auth_notifier.dart';
+import '../../authentication/notifiers/auth_notifier.dart';
 import '../models/comment.dart';
+import '../models/feed_model.dart';
+import 'comment_notifier.dart';
+import 'feed_notifier.dart';
 
 final apiServiceProvider =
     Provider<RemoteApiService>((ref) => RemoteApiService());
 
 final feedProvider =
-    StateNotifierProvider<FeedNotifier, AsyncValue<FeedModel>>((ref) {
+    StateNotifierProvider.autoDispose<FeedNotifier, AsyncValue<FeedModel>>((ref) {
   final user = ref.read(authProvider).user;
   final apiService = ref.watch(apiServiceProvider);
   return FeedNotifier(user ?? UserModel.empty(), apiService);

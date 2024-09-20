@@ -1,7 +1,7 @@
-import 'package:tiktok_clone/presentation/home/home_page/models/comment.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/feed_video.dart';
+import 'comment.dart';
+import 'feed_video.dart';
 
 class FeedModel {
   final List<FeedVideo> videos;

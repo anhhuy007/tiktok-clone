@@ -1,7 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/comment.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_item_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_page_model.dart';
@@ -9,9 +9,10 @@ import 'package:dio/dio.dart';
 import 'package:tiktok_clone/presentation/search/models/searching_item.dart';
 import 'package:tiktok_clone/presentation/search/models/user_info.dart';
 import 'package:tiktok_clone/service/endpoints.dart';
-
 import '../presentation/authentication/models/error_data.dart';
 import '../presentation/authentication/models/user_data.dart';
+import '../presentation/reels/models/comment.dart';
+import '../presentation/reels/models/feed_video.dart';
 
 class RemoteApiService {
   final Dio _dio;
@@ -429,7 +430,7 @@ class RemoteApiService {
   }
 
   Future<void> postSearchHistoryItem(
-      int userId, String searchQuery, int searchedUserId) async {
+      int userId, String searchQuery, int? searchedUserId) async {
     try {
       final response = await _dio.post(searchHistoryUrl, data: {
         'userId': userId,
@@ -473,12 +474,22 @@ class RemoteApiService {
       required String song,
       required String videoUrl}) async {
     try {
+      const randomThumbnailUrls = [
+        "https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg",
+        "https://p16-capcut-sign-va.ibyteimg.com/tos-maliva-i-kosjp4qvy4-us/30c972eff98c46fe973d633a19a69031~tplv-nhvfeczskr-1:900:0.webp?lk3s=35090df9&x-expires=1752670818&x-signature=7YLDueRQx3UwKyF7KVR5LKIsYlU%3D",
+        "https://p16-capcut-sign-va.ibyteimg.com/tos-maliva-i-kosjp4qvy4-us/57c72a59027e42179e02b23322f9a4af~tplv-nhvfeczskr-1:900:0.webp?lk3s=35090df9&x-expires=1754111110&x-signature=URiINHgjtsUm2gJiNilOEI3Rztc%3D",
+        "https://img.freepik.com/premium-vector/lombok-indonesia-oktober-11-2022-follow-us-tiktok-social-vertical-media-banner-with-dynamic-circle-logo_343173-52.jpg?w=360",
+        "https://i.pinimg.com/474x/f1/f1/e5/f1f1e5d6ed548f0b60372a245d36f8da.jpg",
+        "https://i.pinimg.com/736x/cc/f6/f1/ccf6f123d40ce1d70e95e008bf3eb3eb.jpg"
+      ];
+      int randomIndex = Random().nextInt(randomThumbnailUrls.length);
+
       final response = await _dio.post(uploadPostUrl, data: {
         'channelId': channelId,
         'title': title,
         'song': song,
         'videoUrl': videoUrl,
-        'thumbnailUrl': "https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg",
+        'thumbnailUrl': randomThumbnailUrls[randomIndex],
       });
       if (response.statusCode == 200) {
         Logger().d('Post uploaded successfully');

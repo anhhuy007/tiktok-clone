@@ -1,12 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/user_notifier.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_model.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../service/remote_api_service.dart';
 import 'package:logger/logger.dart';
+
+import '../models/feed_model.dart';
+import '../models/feed_video.dart';
 
 class FeedNotifier extends StateNotifier<AsyncValue<FeedModel>> {
   UserModel user;
@@ -16,6 +17,16 @@ class FeedNotifier extends StateNotifier<AsyncValue<FeedModel>> {
   FeedNotifier(this.user, this._remoteApiService)
       : super(const AsyncValue.loading()) {
     fetchFeedVideos();
+  }
+
+  Future<String?> getCurrentVideoUrl() async {
+    return state.maybeWhen(
+      data: (data) {
+        final videoUrl = data.videos[data.currentIndex].videoUrl;
+        return videoUrl;
+      },
+      orElse: () => null,
+    );
   }
 
   Future<void> fetchFeedVideos() async {
@@ -203,25 +214,18 @@ class FeedNotifier extends StateNotifier<AsyncValue<FeedModel>> {
       return videoControllers[videoUrl]!;
     }
 
-    Logger().d('Initializing controller for $videoUrl');
     final controller = VideoPlayerController.network(videoUrl);
     await controller.initialize();
     videoControllers[videoUrl] = controller;
-    Logger().d('Controller initialized for $videoUrl');
 
     return controller;
-  }
-
-  void disposeController(String videoUrl) {
-    final controller = videoControllers[videoUrl];
-    controller?.dispose();
   }
 
   @override
   void dispose() {
     super.dispose();
     for (var controller in videoControllers.values) {
-      controller.dispose();
+      controller.pause();
     }
 
     videoControllers.clear();

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 import 'package:tiktok_clone/presentation/search/models/seach_page_model.dart';
 import 'package:tiktok_clone/presentation/search/notifiers/onfocus_search_notifier.dart';
 import 'package:tiktok_clone/presentation/search/onsearch_focus_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:tiktok_clone/presentation/home/home_page/feeding_page.dart';
-
+import '../reels/feeding_page.dart';
+import '../reels/models/feed_video.dart';
 import 'notifiers/search_notifier.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
@@ -78,6 +77,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 onChanged: (value) {
                   ref.read(onFocusSearchProvider.notifier).search(value);
                 },
+                onSubmitted: (value) {
+                  ref.read(onFocusSearchProvider.notifier).insertSearchHistoryItem(
+                      value, null);
+                }
               ),
             ),
           ),

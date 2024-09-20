@@ -1,31 +1,21 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
-import 'package:tiktok_clone/presentation/home/home_page/feeding_page.dart';
 import '../../../widget/custom_app_bar.dart';
+import 'feeding_page.dart';
 import 'notifiers/feed_providers.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ReelsPage extends ConsumerStatefulWidget {
+  const ReelsPage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ReelsPageState createState() => _ReelsPageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
-
-  @override
-  void dispose() {
-    ref.read(feedProvider.notifier).dispose();
-    super.dispose();
-  }
-
+class _ReelsPageState extends ConsumerState<ReelsPage> {
   @override
   Widget build(BuildContext context) {
     final feedState = ref.watch(feedProvider);

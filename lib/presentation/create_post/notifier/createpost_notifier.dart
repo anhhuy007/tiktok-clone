@@ -9,7 +9,7 @@ import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier
 import 'package:tiktok_clone/presentation/create_post/model/createpost_state.dart';
 import 'package:tiktok_clone/service/remote_api_service.dart';
 
-import '../../home/home_page/notifiers/feed_providers.dart';
+import '../../reels/notifiers/feed_providers.dart';
 
 class CreatePostNotifier extends StateNotifier<CreatePostState> {
   final firebaseStorage = FirebaseStorage.instance;

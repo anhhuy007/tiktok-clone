@@ -73,7 +73,7 @@ Widget UserSearchItemWidget(SearchItem item, WidgetRef ref, bool canRemove) {
   );
 }
 
-Widget QuerySearchItemWidget(String query, WidgetRef ref) {
+Widget QuerySearchItemWidget(SearchItem item, WidgetRef ref, bool canRemove) {
   return ListTile(
     onTap: () {},
     leading: const Padding(
@@ -85,17 +85,23 @@ Widget QuerySearchItemWidget(String query, WidgetRef ref) {
       ),
     ),
     title: Text(
-      query,
+      item.searchQuery ?? 'Unknown',
       style: const TextStyle(
         fontWeight: FontWeight.normal,
         fontSize: 16,
         color: Colors.grey,
       ),
     ),
-    trailing: IconButton(
+    trailing: canRemove
+        ? IconButton(
       icon: const Icon(Icons.highlight_remove, color: Colors.grey),
-      onPressed: () {},
-    ),
+      onPressed: () {
+        ref.read(onFocusSearchProvider.notifier).deleteSearchHistoryItem(
+            item.id ?? 0
+        );
+      },
+    )
+        : null,
   );
 }
 

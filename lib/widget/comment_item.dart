@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
-import '../presentation/home/home_page/models/comment.dart';
+
+import '../presentation/reels/models/comment.dart';
 
 class CommentItem extends StatefulWidget {
   final Comment comment;

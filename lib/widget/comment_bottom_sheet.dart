@@ -6,8 +6,10 @@ import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/constants/placeholder_data.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
-import 'package:tiktok_clone/presentation/home/home_page/notifiers/feed_providers.dart';
 import 'package:tiktok_clone/widget/comment_item.dart';
+
+import '../presentation/reels/models/comment.dart';
+import '../presentation/reels/notifiers/feed_providers.dart';
 
 class CommentBottomSheet extends ConsumerStatefulWidget {
   final Function onDismissSheet;
@@ -137,7 +139,7 @@ class _CommentBottomSheetState extends ConsumerState<CommentBottomSheet> {
                                         child: Column(
                                           children: commentFakeData
                                               .map((comment) =>
-                                                  CommentItem(comment: comment))
+                                                  CommentItem(comment: comment as Comment))
                                               .toList(),
                                         ),
                                       ),

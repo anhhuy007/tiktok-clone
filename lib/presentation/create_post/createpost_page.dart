@@ -1,9 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
-import 'package:tiktok_clone/core/utils/navigator_services.dart';
-import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:tiktok_clone/widget/video_player.dart';
 
 import 'notifier/createpost_notifier.dart';

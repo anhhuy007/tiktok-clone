@@ -1,4 +1,3 @@
-import 'package:tiktok_clone/presentation/home/home_page/models/feed_video.dart';
 
 /// this class is used in the [profile_item_widget] screen.
 class ProfileItemModel {

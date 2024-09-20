@@ -2,9 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
-import 'package:tiktok_clone/presentation/home/home_page/notifiers/feed_providers.dart';
 import 'package:tiktok_clone/presentation/search/models/onfocus_searchpage_model.dart';
 import 'package:tiktok_clone/service/remote_api_service.dart';
+
+import '../../reels/notifiers/feed_providers.dart';
 
 class OnFocusSearchNotifier
     extends StateNotifier<AsyncValue<OnFocusSearchPageModel>> {
@@ -43,7 +44,7 @@ class OnFocusSearchNotifier
     }
   }
 
-  Future<void> insertSearchHistoryItem(String query, int searchedUserId) async {
+  Future<void> insertSearchHistoryItem(String query, int? searchedUserId) async {
     try {
       await apiService.postSearchHistoryItem(user.id, query, searchedUserId);
     } catch (error, stackTrace) {

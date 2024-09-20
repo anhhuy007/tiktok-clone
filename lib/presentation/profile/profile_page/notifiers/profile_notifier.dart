@@ -1,10 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tiktok_clone/core/constants/image_constants.dart';
-import 'package:tiktok_clone/presentation/home/home_page/notifiers/feed_providers.dart';
-import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_item_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_page_model.dart';
-import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
 
+import '../../../reels/notifiers/feed_providers.dart';
 
 /// A notifier that manages the state of a Profile according to the event dispatched to it
 class ProfileNotifier extends Notifier<AsyncValue<ProfileModel>> {
