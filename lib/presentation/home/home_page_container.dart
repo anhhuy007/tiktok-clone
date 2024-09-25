@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
+import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/create_post/createpost_page.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/profile_page_container.dart';
 import 'package:tiktok_clone/presentation/search/search_page.dart';
 
 import '../../core/constants/image_constants.dart';
@@ -30,7 +35,7 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: SalomonBottomBar(
-        backgroundColor: _currentIndex <= 0 ? Colors.black : Colors.white,
+        backgroundColor: _currentIndex <= 1 ? Colors.black : Colors.white,
         currentIndex: _currentIndex,
         onTap: (index) {
           if (_currentIndex != index) {
@@ -119,7 +124,7 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
     // You can add more custom logic here
     // For example, you could call methods on the widgets if needed
     if (oldIndex == 0) {
-      // Profile tab is being left
+      // Reels tab is being left
       String? currentVideoUrl =
           await ref.read(feedProvider.notifier).getCurrentVideoUrl();
       ref.read(videoControllerProvider(currentVideoUrl!)).whenData((value) {
@@ -127,7 +132,7 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
       });
     }
     if (newIndex == 0) {
-      // Profile tab is being entered
+      // Reels tab is being entered
       String? currentVideoUrl =
           await ref.read(feedProvider.notifier).getCurrentVideoUrl();
       ref.read(videoControllerProvider(currentVideoUrl!)).whenData((value) {
@@ -161,45 +166,34 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
     return SalomonBottomBarItem(
       icon: Image(
         image: AssetImage(
-          _currentIndex <= 0 ? whiteThemeIconPath : blackThemeIconPath,
+          _currentIndex <= 1 ? whiteThemeIconPath : blackThemeIconPath,
         ),
         width: 24.adaptSize,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: _currentIndex <= 0 ? Colors.white : selectedColor,
+          color: _currentIndex <= 1 ? Colors.white : selectedColor,
         ),
       ),
-      selectedColor: _currentIndex <= 0 ? Colors.white : selectedColor,
+      selectedColor: _currentIndex <= 1 ? Colors.white : selectedColor,
     );
   }
 }
 
-class Profile extends StatefulWidget {
+class Profile extends ConsumerWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  @override
-  void initState() {
-    super.initState();
-    Logger().d('Profile initState');
-  }
-
-  @override
-  void dispose() {
-    Logger().d('Profile dispose');
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Profile'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final UserModel? user = ref.read(authProvider).user;
+    ref.read(profilePageContainerNotifier.notifier).updateState(
+      userId: user!.id,
+      profileId: user.id,
     );
+    ref.read(profileNotifier.notifier).fetchPopularVideos(userId: user.id);
+
+    return ProfilePageContainer();
   }
 }
+

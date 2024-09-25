@@ -23,17 +23,72 @@ class FeedingPage extends ConsumerWidget {
 
   const FeedingPage({required this.video, Key? key}) : super(key: key);
 
+  Future<bool?> _showBackDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: const Text(
+            'Are you sure you want to leave this page?',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Nevermind'),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Leave'),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
-      child: Container(
-        color: Colors.black,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Stack(children: [
-          VideoPlayerWidget(video: video),
-          UserProfileWidget(video: video)
-        ]),
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, Object? result) async {
+          if (didPop) {
+            return;
+          }
+
+          bool shouldPop = false;
+          ref.read(videoControllerProvider(video.videoUrl)).whenData((value) {
+            if (value.value.isPlaying) {
+              value.pause();
+            }
+            shouldPop = true;
+            Logger().d('pause video in feeding page');
+          });
+
+          if (context.mounted && shouldPop) {
+            Navigator.pop(context);
+          }
+        },
+        child: Container(
+          color: Colors.black,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(children: [
+            VideoPlayerWidget(video: video),
+            UserProfileWidget(video: video)
+          ]),
+        ),
       ),
     );
   }
@@ -50,6 +105,11 @@ class UserProfileWidget extends ConsumerStatefulWidget {
 
 class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
   bool _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +134,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                             GestureDetector(
                               onTap: () async {
                                 if (context.mounted) {
+                                  // pre-fetch the profile page data and notifier
                                   ref
                                       .read(
                                           profilePageContainerNotifier.notifier)
@@ -86,12 +147,18 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                                       .fetchPopularVideos(
                                           userId: widget.video.channelId);
 
-                                  String? currentVideoUrl =
-                                  await ref.read(feedProvider.notifier).getCurrentVideoUrl();
-                                  ref.read(videoControllerProvider(currentVideoUrl!)).whenData((value) {
+                                  // pause the current video
+                                  String? currentVideoUrl = await ref
+                                      .read(feedProvider.notifier)
+                                      .getCurrentVideoUrl();
+                                  ref
+                                      .read(videoControllerProvider(
+                                          currentVideoUrl!))
+                                      .whenData((value) {
                                     value.pause();
                                   });
 
+                                  // navigate to the profile page
                                   NavigatorService.pushNamed(
                                       AppRoutes.profilePage);
                                 }

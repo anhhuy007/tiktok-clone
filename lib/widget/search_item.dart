@@ -37,8 +37,9 @@ Widget UserSearchItemWidget(SearchItem item, WidgetRef ref, bool canRemove) {
         Text(
           item.name ?? 'Unknown',
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w400,
             fontSize: 16,
+            color: Colors.white,
           ),
         ),
         if (item.handle != null)

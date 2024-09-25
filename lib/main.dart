@@ -22,24 +22,38 @@ Future<void> main() async {
 class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  Future<bool> _onWillPop(BuildContext context) async {
-    return await showDialog<bool>(
+  Future<bool?> _onWillPop(BuildContext context) {
+    return showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Are you sure?'),
-        content: const Text('Do you want to exit the app?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: const Text(
+            'Are you sure you want to exit the app?',
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    ) ?? false;
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Leave'),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -49,12 +63,14 @@ class MyApp extends ConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        final navigator = Navigator.of(context);
-        final shouldPop = await _onWillPop(context);
-        if (shouldPop) {
-          navigator.pop();
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (didPop) {
+          return;
+        }
+
+        final bool shouldPop = await _onWillPop(context) ?? false;
+        if (context.mounted && shouldPop) {
+          Navigator.pop(context);
         }
       },
       child: Sizer(
@@ -74,7 +90,7 @@ class MyApp extends ConsumerWidget {
             ),
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
-            routes: AppRoutes.routes,
+            onGenerateRoute: AppRoutes.generateRoute,
             home: authState.isAuthenticated
                 ? const HomePageContainer()
                 : const LogInPage(),

@@ -22,12 +22,17 @@ class OnFocusSearchPage extends ConsumerWidget {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: onClose,
-            child: const Text('Close'),
+            child: const Text(
+                'Close',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
         Expanded(
           child: searchState.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: CircularProgressIndicator(color: Colors.white,)),
             error: (error, stackTrace) => Center(child: Text('Error: $error $stackTrace')),
             data: (data) =>
                 ref.watch(searchPageProvider).value?.searchController.text != ''

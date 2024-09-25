@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:logger/logger.dart';
+import 'package:tiktok_clone/core/utils/navigator_services.dart';
 import 'package:tiktok_clone/presentation/search/models/seach_page_model.dart';
 import 'package:tiktok_clone/presentation/search/notifiers/onfocus_search_notifier.dart';
 import 'package:tiktok_clone/presentation/search/onsearch_focus_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:tiktok_clone/route/app_routes.dart';
 import '../reels/feeding_page.dart';
 import '../reels/models/feed_video.dart';
 import 'notifiers/search_notifier.dart';
@@ -34,7 +37,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
       ref.read(searchPageProvider.notifier).fetchMoreSuggestedVideos();
     }
   }
@@ -44,44 +48,48 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     final searchState = ref.watch(searchPageProvider);
 
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: SizedBox(
-            height: 70,
+            height: 40,
             child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 20, bottom: 8),
+              padding: const EdgeInsets.only(left: 8, right: 8),
               child: TextField(
-                controller: searchState.value?.searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search anything...',
-                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    size: 20,
+                  controller: searchState.value?.searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search anything...',
+                    hintStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 14),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      size: 24,
+                      color: Colors.white,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white10,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                ),
-                style: const TextStyle(color: Colors.black, fontSize: 13),
-                onTap: () {
-                  setState(() {
-                    _isSearchFocused = true;
-                  });
-                },
-                onChanged: (value) {
-                  ref.read(onFocusSearchProvider.notifier).search(value);
-                },
-                onSubmitted: (value) {
-                  ref.read(onFocusSearchProvider.notifier).insertSearchHistoryItem(
-                      value, null);
-                }
-              ),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                  onTap: () {
+                    setState(() {
+                      _isSearchFocused = true;
+                    });
+                  },
+                  onChanged: (value) {
+                    ref.read(onFocusSearchProvider.notifier).search(value);
+                  },
+                  onSubmitted: (value) {
+                    ref
+                        .read(onFocusSearchProvider.notifier)
+                        .insertSearchHistoryItem(value, null);
+                  }),
             ),
           ),
         ),
@@ -94,7 +102,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 });
                 searchState.value?.searchController.clear();
                 FocusScope.of(context).unfocus();
-                ref.read(onFocusSearchProvider.notifier).fetchSearchHistoryItems();
+                ref
+                    .read(onFocusSearchProvider.notifier)
+                    .fetchSearchHistoryItems();
               },
             )
           : Consumer(
@@ -113,7 +123,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         controller: _scrollController,
                         slivers: [
                           SliverGrid(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               childAspectRatio: 1.0,
                             ),
@@ -129,7 +140,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(
-                                  child: LoadingAnimationWidget.staggeredDotsWave(
+                                  child:
+                                      LoadingAnimationWidget.staggeredDotsWave(
                                     color: Colors.black,
                                     size: 30,
                                   ),
@@ -156,11 +168,8 @@ class VideoThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => FeedingPage(video: video),
-          ),
-        );
+        Logger().d('Video thumbnail tapped');
+        NavigatorService.pushNamed(AppRoutes.feedingPage, arguments: video);
       },
       child: Stack(
         fit: StackFit.expand,

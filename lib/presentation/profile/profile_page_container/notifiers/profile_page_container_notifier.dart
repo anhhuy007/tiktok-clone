@@ -5,18 +5,18 @@ import 'package:tiktok_clone/presentation/profile/profile_page_container/models/
 
 import '../../../reels/notifiers/feed_providers.dart';
 
-
 /// A notifier that manages the state of a ProfilePageContainer according to the event dispatched to it
-class ProfilePageContainerNotifier extends Notifier<AsyncValue<ProfilePageContainerModel>> {
-
-
-  Future<void> updateState({required int userId, required int profileId}) async {
+class ProfilePageContainerNotifier
+    extends Notifier<AsyncValue<ProfilePageContainerModel>> {
+  Future<void> updateState(
+      {required int userId, required int profileId}) async {
     state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
-    try{
+    try {
       state = await AsyncValue.guard(() async {
         final profile = await apiService.loadProfile(profileId: profileId);
-        final followStatus = await apiService.getFollowStatus(followerId: userId, followingId: profileId);
+        final followStatus = await apiService.getFollowStatus(
+            followerId: userId, followingId: profileId);
         profile.followed = followStatus;
         return profile;
       });
@@ -28,12 +28,13 @@ class ProfilePageContainerNotifier extends Notifier<AsyncValue<ProfilePageContai
   Future<void> follow({required int userId, required int profileId}) async {
     //state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
-    try{
+    try {
       await apiService.followUser(followerId: userId, followingId: profileId);
       final stateCurrentValue = state.value!;
-      state = AsyncValue.loading();
+      state = const AsyncValue.loading();
       //avoid too much fetching
-      state = AsyncValue.data(stateCurrentValue.copyWith(follower: stateCurrentValue.follower + 1, followed: true));
+      state = AsyncValue.data(stateCurrentValue.copyWith(
+          follower: stateCurrentValue.follower + 1, followed: true));
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }
@@ -41,12 +42,13 @@ class ProfilePageContainerNotifier extends Notifier<AsyncValue<ProfilePageContai
 
   Future<void> unfollow({required int userId, required int profileId}) async {
     final apiService = ref.read(apiServiceProvider);
-    try{
+    try {
       await apiService.unfollowUser(followerId: userId, followingId: profileId);
       final stateCurrentValue = state.value!;
-      state = AsyncValue.loading();
+      state = const AsyncValue.loading();
       //avoid too much fetching
-      state = AsyncValue.data(stateCurrentValue.copyWith(follower: stateCurrentValue.follower - 1, followed: false));
+      state = AsyncValue.data(stateCurrentValue.copyWith(
+          follower: stateCurrentValue.follower - 1, followed: false));
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }
@@ -54,10 +56,10 @@ class ProfilePageContainerNotifier extends Notifier<AsyncValue<ProfilePageContai
 
   @override
   AsyncValue<ProfilePageContainerModel> build() {
-    return AsyncValue.loading();
+    return const AsyncValue.loading();
   }
 }
 
-final profilePageContainerNotifier = NotifierProvider<ProfilePageContainerNotifier, AsyncValue<ProfilePageContainerModel>> (
-    () => ProfilePageContainerNotifier()
-);
+final profilePageContainerNotifier = NotifierProvider<
+        ProfilePageContainerNotifier, AsyncValue<ProfilePageContainerModel>>(
+    () => ProfilePageContainerNotifier());

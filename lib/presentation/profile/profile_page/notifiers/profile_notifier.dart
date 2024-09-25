@@ -7,13 +7,13 @@ import '../../../reels/notifiers/feed_providers.dart';
 class ProfileNotifier extends Notifier<AsyncValue<ProfileModel>> {
   @override
   AsyncValue<ProfileModel> build() {
-    return AsyncValue.loading();
+    return const AsyncValue.loading();
   }
 
   Future<void> fetchPopularVideos({required int userId}) async {
     state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
-    try{
+    try {
       state = await AsyncValue.guard(() async {
         final result = await apiService.loadPopularVideos(userId: userId);
         return result;
@@ -26,7 +26,7 @@ class ProfileNotifier extends Notifier<AsyncValue<ProfileModel>> {
   Future<void> fetchLatestVideos({required int userId}) async {
     state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
-    try{
+    try {
       state = await AsyncValue.guard(() async {
         final result = await apiService.loadLatestVideos(userId: userId);
         return result;
@@ -39,7 +39,7 @@ class ProfileNotifier extends Notifier<AsyncValue<ProfileModel>> {
   Future<void> fetchOldestVideos({required int userId}) async {
     state = const AsyncValue.loading();
     final apiService = ref.read(apiServiceProvider);
-    try{
+    try {
       state = await AsyncValue.guard(() async {
         final result = await apiService.loadOldestVideos(userId: userId);
         return result;
@@ -50,6 +50,6 @@ class ProfileNotifier extends Notifier<AsyncValue<ProfileModel>> {
   }
 }
 
-final profileNotifier = NotifierProvider<ProfileNotifier, AsyncValue<ProfileModel>> (
-    () => ProfileNotifier()
-);
+final profileNotifier =
+    NotifierProvider<ProfileNotifier, AsyncValue<ProfileModel>>(
+        () => ProfileNotifier());
