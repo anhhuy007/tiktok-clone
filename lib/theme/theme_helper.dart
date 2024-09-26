@@ -32,7 +32,7 @@ class CustomTextStyles {
 
   static TextStyle titleSmall = TextStyle(
       color: PrimaryColors.gray700,
-      fontSize: 14.fsize,
+      fontSize: 17.fsize,
       fontWeight: FontWeight.w500,
       fontFamily: "Urbanist"
   );

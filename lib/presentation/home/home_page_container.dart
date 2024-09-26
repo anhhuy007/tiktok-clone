@@ -7,6 +7,7 @@ import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/create_post/createpost_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/profile_page_container.dart';
 import 'package:tiktok_clone/presentation/search/search_page.dart';
@@ -105,7 +106,7 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
                 case 2:
                   return const CreatePostPage();
                 case 3:
-                  return const Profile();
+                  return const ProfilePageContainer();
                 default:
                   return const SizedBox.shrink();
               }
@@ -138,6 +139,14 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
       ref.read(videoControllerProvider(currentVideoUrl!)).whenData((value) {
         value.play();
       });
+    }
+    else if (newIndex == 3) {
+      // Profile tab is being entered
+      final UserModel? user = ref.read(authProvider).user;
+      if (user != null) {
+        await ref.read(profilePageContainerNotifier.notifier).updateState(userId: user.id, profileId: user.id);
+        await ref.read(profileNotifier.notifier).fetchPopularVideos(userId: user.id);
+      }
     }
   }
 
@@ -181,19 +190,4 @@ class _HomePageContainerState extends ConsumerState<HomePageContainer> {
   }
 }
 
-class Profile extends ConsumerWidget {
-  const Profile({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final UserModel? user = ref.read(authProvider).user;
-    ref.read(profilePageContainerNotifier.notifier).updateState(
-      userId: user!.id,
-      profileId: user.id,
-    );
-    ref.read(profileNotifier.notifier).fetchPopularVideos(userId: user.id);
-
-    return ProfilePageContainer();
-  }
-}
 

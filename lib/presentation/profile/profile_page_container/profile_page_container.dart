@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
+import 'package:tiktok_clone/core/utils/navigator_services.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
@@ -9,6 +11,7 @@ import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/widgets/description_text_widget.dart';
+import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:tiktok_clone/theme/theme_helper.dart';
 import 'package:tiktok_clone/widget/app_bar_title.dart';
 import 'package:tiktok_clone/widget/custom_app_bar.dart';
@@ -16,7 +19,7 @@ import 'package:tiktok_clone/widget/custom_elevated_button.dart';
 import 'package:tiktok_clone/widget/custom_image_view.dart';
 
 class ProfilePageContainer extends ConsumerStatefulWidget {
-  ProfilePageContainer({Key? key}) : super(key: key);
+  const ProfilePageContainer({Key? key}) : super(key: key);
 
   @override
   ProfilePageContainerState createState() => ProfilePageContainerState();
@@ -77,7 +80,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.h)),
                               child: CustomImageView(
-                                imagePath: ImageConstant.bannerPath,
+                                imagePath: model.thumbnailUrl,
                               )),
                         ),
                       ),
@@ -105,7 +108,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
                             SizedBox(height: 3.v),
                             Text(
                               model.handle,
-                              style: CustomTextStyles.titleSmallGray900,
+                              style: CustomTextStyles.titleMedium,
                             ),
                             SizedBox(
                               height: 3.v,
@@ -116,12 +119,13 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
                       ],
                     ),
                     SizedBox(height: 15.v),
-                    Container(
-                        child: DescriptionTextWidget(text: model.description)),
+                    DescriptionTextWidget(text: model.description),
                     SizedBox(height: 20.v),
-                    _buildClientTestimonials(context, model),
+                    ref.read(authProvider).user!.id == model.userId
+                        ? _buildUserProfileButton(context)
+                        : _buildClientTestimonials(context, model),
                     SizedBox(height: 20.v),
-                    Container(
+                    SizedBox(
                       height: 40.v,
                       width: 341.h,
                       //margin: EdgeInsets.only(left: 24.h),
@@ -190,7 +194,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
         thumbnailUrl: "fake thumbnail");
     return Skeletonizer(
       child: Scaffold(
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFFFFFFFF),
         appBar: _buildAppBar(context, model),
         body: SizedBox(
           width: SizeUtils.width,
@@ -249,12 +253,11 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
                     ],
                   ),
                   SizedBox(height: 15.v),
-                  Container(
-                      child: DescriptionTextWidget(text: model.description)),
+                  DescriptionTextWidget(text: model.description),
                   SizedBox(height: 20.v),
                   _buildClientTestimonials(context, model),
                   SizedBox(height: 20.v),
-                  Container(
+                  SizedBox(
                     height: 40.v,
                     width: 341.h,
                     //margin: EdgeInsets.only(left: 24.h),
@@ -394,51 +397,107 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
     );
   }
 
-  Widget _buildClientTestimonials(
-      BuildContext context, ProfilePageContainerModel model) {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 0.h),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          CustomElevatedButton(
-            onPressed: () async {
-              final currentUserId = ref.read(authProvider).user!.id;
-              if (currentUserId != model.userId) {
-                if (model.followed) {
-                  ref
-                      .read(profilePageContainerNotifier.notifier)
-                      .unfollow(userId: currentUserId, profileId: model.userId);
-                } else {
-                  ref
-                      .read(profilePageContainerNotifier.notifier)
-                      .follow(userId: currentUserId, profileId: model.userId);
-                }
-              }
+  Widget _buildUserProfileButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 200.h,
+          child: CustomElevatedButton(
+            onPressed: () {
+              Logger().i("Edit profile button clicked");
+              NavigatorService.pushNamed(AppRoutes.editProfilePage);
             },
             buttonStyle: ElevatedButton.styleFrom(
-                backgroundColor: model.followed
-                    ? Theme.of(context).colorScheme.onErrorContainer
-                    : Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 shadowColor: PrimaryColors.gray900,
                 elevation: 3),
-            width: (FIGMA_DESIGN_WIDTH - 30).h,
-            text: model.followed ? "Unfollow" : "Follow",
+            width: 150.h,
+            text: "Edit profile",
             buttonTextStyle: TextStyle(
-                color: model.followed
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onErrorContainer),
+                color: Theme.of(context).colorScheme.onErrorContainer),
             margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
             leftIcon: Container(
               margin: EdgeInsets.only(right: 4.h),
               child: Icon(
-                model.followed ? Icons.check : Icons.person_add,
-                color: model.followed
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onErrorContainer,
+                Icons.settings,
+                color: Theme.of(context).colorScheme.onErrorContainer,
                 size: 14.adaptSize,
               ),
             ),
-          )
-        ]));
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 200.h,
+          child: CustomElevatedButton(
+            onPressed: () {},
+            buttonStyle: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.onErrorContainer,
+                shadowColor: PrimaryColors.gray900,
+                elevation: 3),
+            width: 150.h,
+            text: "Share profile",
+            buttonTextStyle: TextStyle(
+                color: Theme.of(context).colorScheme.primary),
+            margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
+            leftIcon: Container(
+              margin: EdgeInsets.only(right: 4.h),
+              child: Icon(
+                Icons.share,
+                color: Theme.of(context).colorScheme.primary,
+                size: 14.adaptSize,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildClientTestimonials(
+      BuildContext context, ProfilePageContainerModel model) {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      CustomElevatedButton(
+        onPressed: () async {
+          final currentUserId = ref.read(authProvider).user!.id;
+          if (currentUserId != model.userId) {
+            if (model.followed) {
+              ref
+                  .read(profilePageContainerNotifier.notifier)
+                  .unfollow(userId: currentUserId, profileId: model.userId);
+            } else {
+              ref
+                  .read(profilePageContainerNotifier.notifier)
+                  .follow(userId: currentUserId, profileId: model.userId);
+            }
+          }
+        },
+        buttonStyle: ElevatedButton.styleFrom(
+            backgroundColor: model.followed
+                ? Theme.of(context).colorScheme.onErrorContainer
+                : Theme.of(context).colorScheme.primary,
+            shadowColor: PrimaryColors.gray900,
+            elevation: 3),
+        width: (FIGMA_DESIGN_WIDTH - 30).h,
+        text: model.followed ? "Unfollow" : "Follow",
+        buttonTextStyle: TextStyle(
+            color: model.followed
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onErrorContainer),
+        margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
+        leftIcon: Container(
+          margin: EdgeInsets.only(right: 4.h),
+          child: Icon(
+            model.followed ? Icons.check : Icons.person_add,
+            color: model.followed
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onErrorContainer,
+            size: 14.adaptSize,
+          ),
+        ),
+      )
+    ]);
   }
 
   /// Section Widget
@@ -447,7 +506,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
       height: 474.v,
       child: TabBarView(
         controller: tabViewController,
-        children: [ProfilePage(), ProfilePage(), ProfilePage()],
+        children: const [ProfilePage(), ProfilePage(), ProfilePage()],
       ),
     );
   }
@@ -472,7 +531,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!
-                  .copyWith(color: PrimaryColors.gray500, fontSize: 12.fsize),
+                  .copyWith(color: PrimaryColors.gray500, fontSize: 14.fsize),
             ),
             SizedBox(width: 5.h),
             Text(
@@ -480,7 +539,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!
-                  .copyWith(color: PrimaryColors.gray500, fontSize: 12.fsize),
+                  .copyWith(color: PrimaryColors.gray500, fontSize: 14.fsize),
             ),
             SizedBox(width: 1.h)
           ],
