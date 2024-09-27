@@ -1,16 +1,16 @@
-# tiktok_clone
+# TikTok Clone
 
-A new Tiktok Clone project.
+A basic TikTok clone app built with Flutter. This project aims to replicate the core functionalities of the popular social media platform TikTok, allowing users to share and interact with short videos.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Video Sharing**: Users can upload and share short videos.
+- **User Profiles**: Each user has a customizable profile.
+- **Social Interactions**: Users can like, comment, and follow each other.
+- **Intuitive Interface**: A user-friendly design that mimics the original TikTok experience.
+  
+## Technology Stack
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Flutter**: A cross-platform mobile development framework for building natively compiled applications for mobile, web, and desktop from a single codebase.
+- **Dart**: The programming language used for Flutter development.
+- **Firebase**: Used for authentication, real-time database, and hosting.
