@@ -2,6 +2,8 @@
 
 A basic TikTok clone app built with Flutter. This project aims to replicate the core functionalities of the popular social media platform TikTok, allowing users to share and interact with short videos.
 
+![App Mockup.png](https://github.com/anhhuy007/tiktok-clone/blob/master/App%20Mockup.png?raw=true)
+
 ## Features
 
 - **Video Sharing**: Users can upload and share short videos.
@@ -10,7 +12,8 @@ A basic TikTok clone app built with Flutter. This project aims to replicate the 
 - **Intuitive Interface**: A user-friendly design that mimics the original TikTok experience.
   
 ## Technology Stack
-
-- **Flutter**: A cross-platform mobile development framework for building natively compiled applications for mobile, web, and desktop from a single codebase.
-- **Dart**: The programming language used for Flutter development.
-- **Firebase**: Used for authentication, real-time database, and hosting.
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=flutter,firebase,js,py,nodejs,express,postgres,docker" />
+  </a>
+</p>
