@@ -2,6 +2,8 @@
 
 A basic TikTok clone app built with Flutter. This project aims to replicate the core functionalities of the popular social media platform TikTok, allowing users to share and interact with short videos.
 
+![App Mockup.png](https://github.com/anhhuy007/tiktok-clone/blob/master/App%20Mockup.png?raw=true)
+
 ## Features
 
 - **Video Sharing**: Users can upload and share short videos.
