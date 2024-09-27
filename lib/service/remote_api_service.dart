@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/models/profile_item_model.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
@@ -13,12 +11,14 @@ import '../presentation/authentication/models/error_data.dart';
 import '../presentation/authentication/models/user_data.dart';
 import '../presentation/reels/models/comment.dart';
 import '../presentation/reels/models/feed_video.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class RemoteApiService {
   final Dio _dio;
 
   RemoteApiService() : _dio = Dio() {
-    _dio.options.baseUrl = baseLocalUrl;
+    _dio.options.baseUrl = dotenv.env['BASEREMOTEURL']!;
     _dio.options.connectTimeout = const Duration(seconds: 30);
     _dio.options.receiveTimeout = const Duration(seconds: 30);
   }
