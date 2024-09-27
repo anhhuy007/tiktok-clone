@@ -22,8 +22,9 @@ class ImageConstant {
   static String addIcon = '$iconsPath/add.png';
   static String reelsIcon = '$iconsPath/reels.png';
   static String reelsIcon_white = '$iconsPath/reels_white.png';
+  static String imagePlaceHolder = '$iconsPath/image_placeholder.png';
 
-  static String playButtonPath = '$imagesPath/img_play.jpg';
+      static String playButtonPath = '$imagesPath/img_play.jpg';
   static String avatarPath = '$imagesPath/img_sample_avt.jpg';
   static String image1Path = '$imagesPath/img_image_1.jpg';
   static String image2Path = '$imagesPath/img_image_2.jpg';

@@ -82,8 +82,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                     child: Skeletonizer(
                       effect: ShimmerEffect(
                           baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          duration: const Duration(milliseconds: 1)),
+                          highlightColor: Colors.grey.shade100),
                       enabled: true,
                       child: GridView.builder(
                         shrinkWrap: true,

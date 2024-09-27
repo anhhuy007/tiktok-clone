@@ -38,7 +38,7 @@ class UserController extends StateNotifier<AsyncValue<dynamic>> {
     }
   }
 
-  Future<Either<String, bool>> signup(
+  Future<Either<String, dynamic>> signup(
       {required String email,
       required String password,
       required String username,
@@ -58,7 +58,12 @@ class UserController extends StateNotifier<AsyncValue<dynamic>> {
       return Left(response.error);
     }
 
-    return const Right(true);
+    return Right(response);
+  }
+
+  Future<void> logout() async {
+    ref.read(authProvider.notifier).resetAuthState();
+    state = const AsyncData(null);
   }
 }
 

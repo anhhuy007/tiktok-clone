@@ -7,7 +7,7 @@ import '../../../reels/notifiers/feed_providers.dart';
 
 /// A notifier that manages the state of a ProfilePageContainer according to the event dispatched to it
 class ProfilePageContainerNotifier
-    extends Notifier<AsyncValue<ProfilePageContainerModel>> {
+    extends Notifier<AsyncValue<UserInfoModel>> {
   Future<void> updateState(
       {required int userId, required int profileId}) async {
     state = const AsyncValue.loading();
@@ -55,11 +55,11 @@ class ProfilePageContainerNotifier
   }
 
   @override
-  AsyncValue<ProfilePageContainerModel> build() {
+  AsyncValue<UserInfoModel> build() {
     return const AsyncValue.loading();
   }
 }
 
 final profilePageContainerNotifier = NotifierProvider<
-        ProfilePageContainerNotifier, AsyncValue<ProfilePageContainerModel>>(
+        ProfilePageContainerNotifier, AsyncValue<UserInfoModel>>(
     () => ProfilePageContainerNotifier());

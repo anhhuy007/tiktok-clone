@@ -5,7 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/navigator_services.dart';
+import 'package:tiktok_clone/presentation/authentication/models/user_data.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/user_notifier.dart';
+import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
 import 'package:tiktok_clone/route/app_routes.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
@@ -197,22 +199,12 @@ class _SignupFormWidgetState extends ConsumerState<SignupFormWidget> {
         },
             (success) {
           Logger().d('Sign up successful');
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Congratulations',
-                  message: 'Sign up successful! Please login to continue.',
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
           Navigator.pop(context);
-          NavigatorService.pushNamed(AppRoutes.loginPage);
+          UserInfoModel userInfo = UserInfoModel.empty();
+          // convert user id to int
+          userInfo.userId = (success[0]['id'] as int);
+
+          NavigatorService.pushNamed(AppRoutes.createProfilePage, arguments: userInfo);
         },
       );
     } finally {

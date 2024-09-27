@@ -52,7 +52,7 @@ class RemoteApiService {
 
       Logger().d("Response: ${response.data}");
 
-      return response;
+      return response.data['data'];
     } on DioError catch (e) {
       Logger().e("Error: ${e.response!.data}");
       return ErrorResponse.fromJson(e.response!.data);
@@ -93,13 +93,13 @@ class RemoteApiService {
     }
   }
 
-  Future<ProfilePageContainerModel> loadProfile(
+  Future<UserInfoModel> loadProfile(
       {required int profileId}) async {
     try {
       final response =
           await _dio.get("$profileInfoUrl/${profileId.toString()}");
       if (response.statusCode == 200) {
-        return ProfilePageContainerModel.fromJson(response.data["data"][0]);
+        return UserInfoModel.fromJson(response.data["data"][0]);
       } else {
         throw DioException(
             requestOptions: response.requestOptions,
@@ -453,7 +453,8 @@ class RemoteApiService {
 
   Future<void> deleteSearchHistoryItem(int searchId) async {
     try {
-      final response = await _dio.delete(searchHistoryUrl + searchId.toString());
+      final response =
+          await _dio.delete(searchHistoryUrl + searchId.toString());
       if (response.statusCode == 200) {
         Logger().d('Search history item deleted successfully');
       } else {
@@ -499,6 +500,39 @@ class RemoteApiService {
       }
     } on DioException catch (err) {
       throw Exception('Failed to upload post: ${err.message}');
+    }
+  }
+
+  Future<bool> updateProfile({
+    required int userId,
+    required String name,
+    required String handle,
+    required String description,
+    required String avatarUrl,
+    required String thumbnailUrl,
+  }) async {
+    try {
+      final response = await _dio.post(updateProfileUrl, data: {
+        'id': userId,
+        'handle': handle,
+        'name': name,
+        'description': description,
+        'avatar_url': avatarUrl,
+        'thumbnail_url': thumbnailUrl,
+      });
+      if (response.statusCode == 200) {
+        Logger().d('Profile updated successfully');
+
+        return true;
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to update profile',
+        );
+      }
+    } on DioException catch (err) {
+      throw Exception('Failed to update profile: ${err.message}');
     }
   }
 }

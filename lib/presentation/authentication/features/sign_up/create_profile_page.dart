@@ -9,19 +9,18 @@ import 'package:tiktok_clone/presentation/profile/profile_page_container/models/
 import 'package:tiktok_clone/presentation/profile/profile_page_container/notifiers/profile_page_container_notifier.dart';
 import 'package:tiktok_clone/presentation/reels/notifiers/feed_providers.dart';
 import 'package:tiktok_clone/route/app_routes.dart';
-import '../../../widget/custom_image_view.dart';
+import '../../../../widget/custom_image_view.dart';
 
-class EditProfilePage extends ConsumerStatefulWidget {
-  const EditProfilePage({required this.userModel, super.key});
-
+class CreateProfilePage extends ConsumerStatefulWidget {
+  const CreateProfilePage({required this.userModel, super.key});
   final UserInfoModel userModel;
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _CreateProfilePageState createState() => _CreateProfilePageState();
 }
 
-class _EditProfilePageState extends ConsumerState<EditProfilePage> {
-  bool _showThreadsBadge = false;
+class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
+  bool _darkMode = false;
   bool _showEditNewThumbnail = false;
   File? _profileImage;
   File? _thumbnailImage;
@@ -87,10 +86,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: const Text('Edit profile',
             style: TextStyle(color: Colors.black, fontSize: 24)),
       ),
@@ -107,15 +102,15 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     onTap: () => _showImageSourceActionSheet(true),
                     child: _profileImage != null
                         ? CircleAvatar(
-                            radius: 35,
-                            backgroundImage: FileImage(_profileImage!),
-                          )
+                      radius: 35,
+                      backgroundImage: FileImage(_profileImage!),
+                    )
                         : CustomImageView(
-                            imagePath: widget.userModel.avatarUrl,
-                            height: 70.adaptSize,
-                            width: 70.adaptSize,
-                            borderRadius: BorderRadius.circular(60.h),
-                          ),
+                      imagePath: widget.userModel.avatarUrl,
+                      height: 70.adaptSize,
+                      width: 70.adaptSize,
+                      borderRadius: BorderRadius.circular(60.h),
+                    ),
                   ),
                   const SizedBox(width: 16),
                   InkWell(
@@ -176,20 +171,20 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     Center(
                       child: _thumbnailImage != null
                           ? ClipRRect(
-                              borderRadius: BorderRadius.circular(10.h),
-                              child: Image.file(
-                                _thumbnailImage!,
-                                height: 170.adaptSize,
-                                width: 1000.adaptSize,
-                                fit: BoxFit.cover,
-                              ),
-                            )
+                        borderRadius: BorderRadius.circular(10.h),
+                        child: Image.file(
+                          _thumbnailImage!,
+                          height: 170.adaptSize,
+                          width: 1000.adaptSize,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                           : CustomImageView(
-                              imagePath: widget.userModel.thumbnailUrl,
-                              height: 170.adaptSize,
-                              width: 1000.adaptSize,
-                              borderRadius: BorderRadius.circular(10.h),
-                            ),
+                        imagePath: widget.userModel.thumbnailUrl,
+                        height: 170.adaptSize,
+                        width: 1000.adaptSize,
+                        borderRadius: BorderRadius.circular(10.h),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Center(
@@ -207,10 +202,10 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               children: [
                 const Text('Dark mode'),
                 Switch(
-                  value: _showThreadsBadge,
+                  value: _darkMode,
                   onChanged: (value) {
                     setState(() {
-                      _showThreadsBadge = value;
+                      _darkMode = value;
                     });
                   },
                 ),
@@ -249,7 +244,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     child: _isUploading
                         ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white))
                         : const Text('Confirm',
-                            style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white)),
                   ),
                 )
               ],
@@ -284,17 +279,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       }
 
       bool result = await ref.read(apiServiceProvider).updateProfile(
-            userId: widget.userModel.userId,
-            name: _nameController.text.trim(),
-            handle: _handleController.text.trim(),
-            description: _descriptionController.text.trim(),
-            avatarUrl: avatarUrl,
-            thumbnailUrl: thumbnailUrl,
-          );
+        userId: widget.userModel.userId,
+        name: _nameController.text.trim(),
+        handle: _handleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        avatarUrl: avatarUrl,
+        thumbnailUrl: thumbnailUrl,
+      );
 
       if (result) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
+          const SnackBar(content: Text('Account created successfully, please login to continue')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -305,10 +300,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         return;
       }
 
-      await ref.read(profilePageContainerNotifier.notifier).updateState(
-          userId: widget.userModel.userId, profileId: widget.userModel.userId);
       _isUploading = false;
-      NavigatorService.goBack();
+      NavigatorService.popAndPushNamed(AppRoutes.loginPage);
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:tiktok_clone/core/constants/image_constants.dart';
 import 'package:tiktok_clone/core/utils/navigator_services.dart';
 import 'package:tiktok_clone/core/utils/size_utils.dart';
 import 'package:tiktok_clone/presentation/authentication/notifiers/auth_notifier.dart';
+import 'package:tiktok_clone/presentation/authentication/notifiers/user_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/notifiers/profile_notifier.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page/profile_page.dart';
 import 'package:tiktok_clone/presentation/profile/profile_page_container/models/profile_page_container_model.dart';
@@ -122,7 +123,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
                     DescriptionTextWidget(text: model.description),
                     SizedBox(height: 20.v),
                     ref.read(authProvider).user!.id == model.userId
-                        ? _buildUserProfileButton(context)
+                        ? _buildUserProfileButton(context, model)
                         : _buildClientTestimonials(context, model),
                     SizedBox(height: 20.v),
                     SizedBox(
@@ -182,7 +183,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
   }
 
   Widget _buildPlaceholder(BuildContext context) {
-    ProfilePageContainerModel model = ProfilePageContainerModel(
+    UserInfoModel model = UserInfoModel(
         userId: -1,
         handle: "fake handle",
         name: "fake name",
@@ -314,15 +315,9 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(
-      BuildContext context, ProfilePageContainerModel model) {
+      BuildContext context, UserInfoModel model) {
     return CustomAppBar(
       leadingWidth: 52.h,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
       title: AppBarTitle(
         text: model.name,
         margin: EdgeInsets.only(left: 16.h),
@@ -354,7 +349,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
 
   /// Section Widget
   Widget _buildRecentOrders(
-      BuildContext context, ProfilePageContainerModel model) {
+      BuildContext context, UserInfoModel model) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.h),
       child: Row(
@@ -397,7 +392,8 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
     );
   }
 
-  Widget _buildUserProfileButton(BuildContext context) {
+  Widget _buildUserProfileButton(
+      BuildContext context, UserInfoModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -406,7 +402,8 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
           child: CustomElevatedButton(
             onPressed: () {
               Logger().i("Edit profile button clicked");
-              NavigatorService.pushNamed(AppRoutes.editProfilePage);
+              NavigatorService.pushNamed(AppRoutes.editProfilePage,
+                  arguments: model);
             },
             buttonStyle: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
@@ -431,20 +428,26 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
         SizedBox(
           width: 200.h,
           child: CustomElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              Logger().i("Logout button clicked");
+              await ref.read(userControllerProvider.notifier).logout();
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Logout successfully")));
+              NavigatorService.popAndPushNamed(AppRoutes.loginPage);
+            },
             buttonStyle: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.onErrorContainer,
                 shadowColor: PrimaryColors.gray900,
                 elevation: 3),
             width: 150.h,
-            text: "Share profile",
-            buttonTextStyle: TextStyle(
-                color: Theme.of(context).colorScheme.primary),
+            text: "Logout",
+            buttonTextStyle:
+                TextStyle(color: Theme.of(context).colorScheme.primary),
             margin: EdgeInsets.symmetric(vertical: 1.v, horizontal: 2.v),
             leftIcon: Container(
               margin: EdgeInsets.only(right: 4.h),
               child: Icon(
-                Icons.share,
+                Icons.logout,
                 color: Theme.of(context).colorScheme.primary,
                 size: 14.adaptSize,
               ),
@@ -456,7 +459,7 @@ class ProfilePageContainerState extends ConsumerState<ProfilePageContainer>
   }
 
   Widget _buildClientTestimonials(
-      BuildContext context, ProfilePageContainerModel model) {
+      BuildContext context, UserInfoModel model) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       CustomElevatedButton(
         onPressed: () async {

@@ -1,5 +1,5 @@
-class ProfilePageContainerModel {
-  ProfilePageContainerModel(
+class UserInfoModel {
+  UserInfoModel(
       {required this.userId,
       required this.handle,
       required this.name,
@@ -21,8 +21,19 @@ class ProfilePageContainerModel {
   String thumbnailUrl;
   bool followed = false;
 
-  factory ProfilePageContainerModel.fromJson(Map<String, dynamic> json) =>
-      ProfilePageContainerModel(
+  factory UserInfoModel.empty() => UserInfoModel(
+      userId: 0,
+      handle: '',
+      name: '',
+      follower: 0,
+      following: 0,
+      posts: 0,
+      description: '',
+      avatarUrl: '',
+      thumbnailUrl: '');
+
+  factory UserInfoModel.fromJson(Map<String, dynamic> json) =>
+      UserInfoModel(
           userId: json['id'],
           handle: json['handle'],
           name: json['name'],
@@ -47,7 +58,7 @@ class ProfilePageContainerModel {
     };
   }
 
-  ProfilePageContainerModel copyWith({
+  UserInfoModel copyWith({
     int? userId,
     String? handle,
     String? name,
@@ -59,7 +70,7 @@ class ProfilePageContainerModel {
     String? thumbnailUrl,
     bool? followed,
   }) {
-    return ProfilePageContainerModel(
+    return UserInfoModel(
       userId: userId ?? this.userId,
       handle: handle ?? this.handle,
       name: name ?? this.name,

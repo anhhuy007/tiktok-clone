@@ -23,40 +23,6 @@ class FeedingPage extends ConsumerWidget {
 
   const FeedingPage({required this.video, Key? key}) : super(key: key);
 
-  Future<bool?> _showBackDialog(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Are you sure?'),
-          content: const Text(
-            'Are you sure you want to leave this page?',
-          ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Nevermind'),
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Leave'),
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
@@ -226,28 +192,27 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                           ],
                         ),
                         SizedBox(height: 8.v),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 272.h,
-                              child: TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isExpanded = !_isExpanded;
-                                  });
-                                },
-                                child: Text(
-                                  widget.video.title,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal),
-                                  maxLines: _isExpanded ? 10 : 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                        SizedBox(
+                          width: 272.h,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _isExpanded = !_isExpanded;
+                              });
+                            },
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.video.title,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal),
+                                maxLines: _isExpanded ? 10 : 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ]),
                   Padding(

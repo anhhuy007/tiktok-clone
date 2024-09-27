@@ -35,34 +35,37 @@ class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 3.v),
       child: secondHalf.isEmpty
-          ? Text(firstHalf,style: TextStyle(fontFamily: "Urbanist"))
+          ? Text(firstHalf, style: const TextStyle(fontFamily: "Urbanist"))
           : Column(
-          children: <Widget>[
-          Text(
-            flag ? (firstHalf + "...") : (firstHalf + secondHalf),
-            style: TextStyle(
-              fontFamily: "Urbanist",
-            ),
-            textAlign: TextAlign.justify,
-          ),
-          InkWell(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Text(
-                  flag ? "show more" : "show less",
-                  style: TextStyle(color: PrimaryColors.gray500, fontFamily: "Urbanist", fontSize: 14.fsize),
+                  flag ? ("$firstHalf...") : (firstHalf + secondHalf),
+                  style: const TextStyle(
+                    fontFamily: "Urbanist",
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
+                InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        flag ? "show more" : "show less",
+                        style: TextStyle(
+                            color: PrimaryColors.gray500,
+                            fontFamily: "Urbanist",
+                            fontSize: 14.fsize),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    setState(() {
+                      flag = !flag;
+                    });
+                  },
                 ),
               ],
             ),
-            onTap: () {
-              setState(() {
-                flag = !flag;
-              });
-            },
-          ),
-        ],
-      ),
     );
   }
 }

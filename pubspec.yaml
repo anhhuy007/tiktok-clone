@@ -75,7 +75,6 @@ dependencies:
   image_picker: ^1.1.2
   get_thumbnail_video: ^0.6.1
   path_provider: ^2.1.4
-  double_tap_to_exit: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +85,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  icons_launcher: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -152,3 +152,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+icons_launcher:
+  image_path: "assets/icons/tiktok.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
