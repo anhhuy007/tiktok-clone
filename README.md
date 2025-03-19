@@ -1,6 +1,7 @@
 # TikTok Clone
 
 A basic TikTok clone app built with Flutter. This project aims to replicate the core functionalities of the popular social media platform TikTok, allowing users to share and interact with short videos.
+Visit the server: https://github.com/anhhuy007/nftify-server
 
 ![App Mockup.png](https://github.com/anhhuy007/tiktok-clone/blob/master/App%20Mockup.png?raw=true)
 
